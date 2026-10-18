@@ -1,11 +1,11 @@
-/* Nori Coffee — site behaviour: navigation, cart, product grids, origins map. */
+/* Naughty Coffee — site behaviour: navigation, cart, product grids, origins map. */
 (function () {
   "use strict";
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-  const money = (n) => NORI.currency + (Number.isInteger(n) ? n : n.toFixed(2));
-  const byId = (id) => NORI.products.find((p) => p.id === id);
+  const money = (n) => SHOP.currency + (Number.isInteger(n) ? n : n.toFixed(2));
+  const byId = (id) => SHOP.products.find((p) => p.id === id);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   document.documentElement.classList.remove("no-js");
@@ -50,7 +50,7 @@
 
   /* ---------------- Cart ---------------- */
 
-  const CART_KEY = "nori-cart";
+  const CART_KEY = "naughty-cart";
   let cart = [];
   try { cart = JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch (e) { cart = []; }
   cart = cart.filter((l) => byId(l.id));
@@ -119,7 +119,7 @@
     lines.innerHTML = cart.map((l, i) => {
       const p = byId(l.id);
       return `<div class="line-item">
-        <div class="line-thumb">${NORI.art.forProduct(p)}</div>
+        <div class="line-thumb">${SHOP.art.forProduct(p)}</div>
         <div>
           <h3>${p.name}</h3>
           <div class="mono">${l.option}</div>
@@ -137,8 +137,8 @@
     }).join("");
 
     const total = cart.reduce((n, l) => n + byId(l.id).price * l.qty, 0);
-    const left = NORI.freeShippingAt - total;
-    const pct = Math.min(100, (total / NORI.freeShippingAt) * 100);
+    const left = SHOP.freeShippingAt - total;
+    const pct = Math.min(100, (total / SHOP.freeShippingAt) * 100);
     foot.innerHTML = `
       <div class="mono">${left > 0 ? `${money(left)} away from free shipping` : "You've unlocked free shipping"}</div>
       <div class="ship-bar"><i style="width:${pct}%"></i></div>
@@ -175,7 +175,7 @@
   }
 
   function productCard(p) {
-    const opts = p.type === "coffee" ? NORI.grinds : p.sizes;
+    const opts = p.type === "coffee" ? SHOP.grinds : p.sizes;
     const optLabel = p.type === "coffee" ? "Grind" : "Size";
     const select = opts.length > 1
       ? `<select class="select" aria-label="${optLabel} for ${p.name}" data-option>${opts.map((o) => `<option>${o}</option>`).join("")}</select>`
@@ -188,7 +188,7 @@
     return `<article class="card reveal" data-type="${p.type}" style="--tint:${p.color}">
       <div class="card-media">
         ${p.tag ? `<span class="card-tag">${p.tag}</span>` : ""}
-        ${NORI.art.forProduct(p)}
+        ${SHOP.art.forProduct(p)}
         <div class="card-quick"><button class="btn" data-add="${p.id}">Add to bag — ${money(p.price)}</button></div>
       </div>
       <div class="card-info"><h3 class="card-title">${p.name}</h3><span class="card-price">${money(p.price)}</span></div>
@@ -200,7 +200,7 @@
   $$("[data-products]").forEach((grid) => {
     const type = grid.dataset.products;
     const limit = +grid.dataset.limit || Infinity;
-    const list = NORI.products.filter((p) => type === "all" || p.type === type).slice(0, limit);
+    const list = SHOP.products.filter((p) => type === "all" || p.type === type).slice(0, limit);
     grid.innerHTML = list.map(productCard).join("");
   });
 
@@ -231,7 +231,7 @@
   /* ---------------- Menu page ---------------- */
 
   $$("[data-menu]").forEach((list) => {
-    const items = NORI.menu[list.dataset.menu] || [];
+    const items = SHOP.menu[list.dataset.menu] || [];
     list.innerHTML = items.map((it) => `<li class="menu-item reveal">
       <div class="menu-row"><h3>${it.name}${(it.diet || []).map((d) => ` <span class="diet">${d}</span>`).join("")}</h3><span class="dots"></span><span class="price">${money(it.price)}</span></div>
       <p>${it.desc}</p>
@@ -255,7 +255,7 @@
     const lines = [[23.44, "Tropic of Cancer"], [0, "Equator"], [-23.44, "Tropic of Capricorn"]].map(([lat, name]) =>
       `<line x1="0" x2="${W}" y1="${ty(lat)}" y2="${ty(lat)}" stroke="#161613" stroke-opacity="${lat === 0 ? 0.35 : 0.2}" stroke-dasharray="${lat === 0 ? "0" : "3 5"}"/>
        <text x="${W - 6}" y="${ty(lat) - 6}" text-anchor="end" font-family="DM Mono, monospace" font-size="10" letter-spacing="1" fill="#55534b">${name.toUpperCase()}</text>`).join("");
-    const pins = NORI.origins.map((o) => {
+    const pins = SHOP.origins.map((o) => {
       const [x, y] = px(o.coords);
       const side = labelSide[o.id];
       const lx = side ? x : x + 12, ly = side === "up" ? y - 14 : side === "down" ? y + 22 : y + 4;
@@ -273,13 +273,13 @@
 
   const storiesEl = $("[data-stories]");
   if (storiesEl) {
-    storiesEl.innerHTML = NORI.origins.map((o) => {
-      const beans = NORI.products.filter((p) => p.originId === o.id);
+    storiesEl.innerHTML = SHOP.origins.map((o) => {
+      const beans = SHOP.products.filter((p) => p.originId === o.id);
       const lat = `${Math.abs(o.coords[1]).toFixed(1)}°${o.coords[1] >= 0 ? "N" : "S"}`;
       const lon = `${Math.abs(o.coords[0]).toFixed(1)}°${o.coords[0] >= 0 ? "E" : "W"}`;
       return `<article class="story" id="${o.id}">
         <div class="story-head reveal">
-          <div class="story-swatch" style="background:${o.color}33">${NORI.art.cherry(o.color)}</div>
+          <div class="story-swatch" style="background:${o.color}33">${SHOP.art.cherry(o.color)}</div>
           <div>
             <span class="eyebrow eyebrow--plain">${o.region} · ${lat} ${lon}</span>
             <h2 class="h2">${o.country}</h2>
@@ -306,11 +306,11 @@
 
     storiesEl.addEventListener("click", (e) => {
       const b = e.target.closest("[data-add-direct]");
-      if (b) addToCart(b.dataset.addDirect, NORI.grinds[0]);
+      if (b) addToCart(b.dataset.addDirect, SHOP.grinds[0]);
     });
 
     const toc = $("[data-toc]");
-    if (toc) toc.innerHTML = NORI.origins.map((o) => `<li><a href="#${o.id}" data-toc-link="${o.id}"><span>${o.country}</span></a></li>`).join("");
+    if (toc) toc.innerHTML = SHOP.origins.map((o) => `<li><a href="#${o.id}" data-toc-link="${o.id}"><span>${o.country}</span></a></li>`).join("");
 
     const setActive = (id) => {
       $$("[data-toc-link]").forEach((a) => a.classList.toggle("is-active", a.dataset.tocLink === id));
@@ -322,12 +322,12 @@
       }, { rootMargin: "-45% 0px -50% 0px" });
       $$(".story").forEach((s) => io.observe(s));
     }
-    setActive(NORI.origins[0].id);
+    setActive(SHOP.origins[0].id);
   }
 
   // Home page origins list
   $$("[data-origin-list]").forEach((ul) => {
-    ul.innerHTML = NORI.origins.map((o, i) => `<li><a href="origins.html#${o.id}">
+    ul.innerHTML = SHOP.origins.map((o, i) => `<li><a href="origins.html#${o.id}">
       <span class="idx">0${i + 1}</span>
       <span class="country">${o.country}</span>
       <span class="region">${o.region}</span>

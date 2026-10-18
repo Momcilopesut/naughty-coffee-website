@@ -1,12 +1,12 @@
-/* Nori Coffee — catalogue & origin stories.
+/* Naughty Coffee — catalogue & origin stories.
    Edit this file to change products, prices and stories; the pages render from it. */
 
-window.NORI = window.NORI || {};
+window.SHOP = window.SHOP || {};
 
-NORI.currency = "€";
-NORI.freeShippingAt = 45;
+SHOP.currency = "€";
+SHOP.freeShippingAt = 45;
 
-NORI.products = [
+SHOP.products = [
   // ---- Coffee ----
   {
     id: "guji-hambela", type: "coffee", name: "Guji Hambela", origin: "Ethiopia", originId: "ethiopia",
@@ -51,7 +51,7 @@ NORI.products = [
 
   // ---- Apparel ----
   {
-    id: "logo-tee", type: "apparel", kind: "tee", name: "Nori Logo Tee", origin: "Heavyweight organic cotton",
+    id: "logo-tee", type: "apparel", kind: "tee", name: "Naughty Logo Tee", origin: "Heavyweight organic cotton",
     price: 32, color: "#f3efe6", print: "#1f2b22", sizes: ["S", "M", "L", "XL"]
   },
   {
@@ -68,10 +68,10 @@ NORI.products = [
   }
 ];
 
-NORI.grinds = ["Whole bean", "Espresso", "Filter", "French press"];
+SHOP.grinds = ["Whole bean", "Espresso", "Filter", "French press"];
 
 /* Coordinates are [longitude, latitude] for the coffee-belt map. */
-NORI.origins = [
+SHOP.origins = [
   {
     id: "ethiopia", country: "Ethiopia", region: "Guji Zone, Oromia", coords: [38.9, 5.8], color: "#e7b24c",
     altitude: "1,950–2,300 m", varietals: "Indigenous landraces", process: "Washed", harvest: "Nov – Jan",
@@ -140,9 +140,9 @@ NORI.origins = [
   }
 ];
 
-NORI.menu = {
+SHOP.menu = {
   breakfast: [
-    { name: "Nori Breakfast Plate", price: 15, desc: "Two soft eggs, miso-butter mushrooms, charred greens, house sourdough, pickled shallot.", diet: ["V"] },
+    { name: "Naughty Breakfast Plate", price: 15, desc: "Two soft eggs, miso-butter mushrooms, charred greens, house sourdough, pickled shallot.", diet: ["V"] },
     { name: "Tamago Sando", price: 12, desc: "Thick-cut Japanese omelette, kewpie, chives on toasted milk bread.", diet: ["V"] },
     { name: "Shakshuka", price: 14, desc: "Spiced tomato and pepper, baked eggs, labneh, za'atar, grilled flatbread.", diet: ["V"] },
     { name: "Crispy Rice Bowl", price: 15, desc: "Sesame crispy rice, soy-cured egg yolk, avocado, cucumber, furikake, chili crisp.", diet: ["V", "GF"] },
@@ -156,14 +156,14 @@ NORI.menu = {
     { name: "Cappuccino", price: 4.0, desc: "Classic, generous foam." },
     { name: "Batch Brew", price: 3.5, desc: "Today's filter, refills half price." },
     { name: "Pour Over", price: 5.5, desc: "Any single origin from the shelf, brewed to order." },
-    { name: "Nori Tonic", price: 5.0, desc: "Espresso, yuzu tonic, a twist of lemon." },
+    { name: "Naughty Tonic", price: 5.0, desc: "Espresso, yuzu tonic, a twist of lemon." },
     { name: "Hojicha Latte", price: 4.8, desc: "Roasted green tea, a little honey. No coffee." }
   ]
 };
 
 /* ---------- Illustrations (generated SVG so the site needs no photos) ---------- */
 
-NORI.art = {
+SHOP.art = {
   bag(p) {
     const dark = p.bag === "#1f2b22";
     const ink = dark ? "#f3efe6" : "#161613";
@@ -176,7 +176,7 @@ NORI.art = {
       <path d="M32 38 l6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5" fill="none" stroke="${ink}" stroke-opacity=".25"/>
       <circle cx="100" cy="62" r="6" fill="none" stroke="${ink}" stroke-opacity=".3"/>
       <rect x="48" y="88" width="104" height="128" rx="2" fill="${p.color}"/>
-      <text x="100" y="124" text-anchor="middle" font-family="Instrument Serif, serif" font-size="30" fill="${dark ? "#161613" : "#161613"}">Nori</text>
+      <text x="100" y="124" text-anchor="middle" font-family="Instrument Serif, serif" font-size="25" fill="#161613">Naughty</text>
       <line x1="62" y1="136" x2="138" y2="136" stroke="#161613" stroke-opacity=".5"/>
       <text x="100" y="158" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" letter-spacing="1.6" fill="#161613">${origin}</text>
       <text x="100" y="176" text-anchor="middle" font-family="Instrument Serif, serif" font-style="italic" font-size="13" fill="#161613">${p.name}</text>
@@ -189,7 +189,7 @@ NORI.art = {
       <path d="M86 22 Q120 44 154 22" fill="none" stroke="#161613" stroke-opacity=".25" stroke-width="3"/>
       <circle cx="120" cy="98" r="22" fill="${p.print}"/>
       <path d="M108 104 q12 -22 24 -12" fill="none" stroke="${p.color}" stroke-width="3" stroke-linecap="round"/>
-      <text x="120" y="142" text-anchor="middle" font-family="Instrument Serif, serif" font-size="20" fill="${p.print}">Nori</text>
+      <text x="120" y="142" text-anchor="middle" font-family="Instrument Serif, serif" font-size="19" fill="${p.print}">Naughty</text>
       <text x="120" y="156" text-anchor="middle" font-family="DM Mono, monospace" font-size="6" letter-spacing="1.5" fill="${p.print}">ROASTERY · KITCHEN</text>
     </svg>`;
   },
@@ -199,8 +199,8 @@ NORI.art = {
       <path d="M122 42 Q100 80 98 128 M122 42 Q150 80 156 128" fill="none" stroke="#161613" stroke-opacity=".15"/>
       <path d="M44 128 Q120 146 200 128 Q226 140 226 152 Q140 172 70 158 Q40 150 44 128 Z" fill="${p.color}" stroke="#161613" stroke-opacity=".18"/>
       <ellipse cx="122" cy="44" rx="7" ry="3" fill="#161613" opacity=".3"/>
-      <rect x="102" y="88" width="40" height="22" rx="2" fill="${p.print}"/>
-      <text x="122" y="104" text-anchor="middle" font-family="Instrument Serif, serif" font-size="14" fill="${p.color}">Nori</text>
+      <rect x="92" y="88" width="60" height="22" rx="2" fill="${p.print}"/>
+      <text x="122" y="104" text-anchor="middle" font-family="Instrument Serif, serif" font-size="13" fill="${p.color}">Naughty</text>
     </svg>`;
   },
   beanie(p) {
@@ -212,8 +212,8 @@ NORI.art = {
       <rect x="44" y="136" width="152" height="54" rx="6" fill="${p.color}"/>
       <rect x="44" y="136" width="152" height="54" rx="6" fill="#000" opacity=".08"/>
       ${ribs}
-      <rect x="104" y="150" width="32" height="24" rx="2" fill="${p.print}"/>
-      <text x="120" y="166" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="${p.color}">Nori</text>
+      <rect x="94" y="150" width="52" height="24" rx="2" fill="${p.print}"/>
+      <text x="120" y="166" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="${p.color}">Naughty</text>
     </svg>`;
   },
   forProduct(p) {

@@ -1,4 +1,4 @@
-/* Naughty Coffee — site behaviour: navigation, cart, product grids, origins map. */
+/* Kumcoffee — site behaviour: navigation, cart, product grids, origins map. */
 (function () {
   "use strict";
 
@@ -50,7 +50,7 @@
 
   /* ---------------- Cart ---------------- */
 
-  const CART_KEY = "naughty-cart";
+  const CART_KEY = "kumcoffee-cart";
   let cart = [];
   try { cart = JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch (e) { cart = []; }
   cart = cart.filter((l) => byId(l.id));

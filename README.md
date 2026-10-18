@@ -1,6 +1,6 @@
-# Naughty Coffee — website
+# Kumcoffee — website
 
-Website for Naughty Coffee: a specialty coffee shop, roastery and kitchen.
+Website for Kumcoffee: a specialty coffee shop, roastery and kitchen.
 Plain HTML, CSS and JavaScript — no build step, no dependencies.
 
 ## Pages
@@ -29,7 +29,7 @@ Product images are generated SVG illustrations (bags, tees, caps), so no photos 
 swap in real photography later if you like.
 
 Placeholder details to replace before launch: the address (`12 Harbour Lane`), email
-(`hello@naughtycoffee.example`), Instagram and Google Maps links, and opening hours.
+(`hello@kumcoffee.example`), Instagram and Google Maps links, and opening hours.
 
 ## Checkout
 

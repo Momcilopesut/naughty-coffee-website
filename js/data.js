@@ -11,32 +11,32 @@ SHOP.products = [
   {
     id: "guji-hambela", type: "coffee", name: "Guji Hambela", origin: "Ethiopia", originId: "ethiopia",
     process: "Washed", roast: 1, notes: ["Jasmine", "Bergamot", "White peach"],
-    price: 22, size: "250g", color: "#e7b24c", bag: "#efe6d4", tag: "New harvest"
+    price: 22, size: "250g", color: "#e7b24c", bag: "#ffffff", tag: "New harvest"
   },
   {
     id: "huila-pink-bourbon", type: "coffee", name: "Huila Pink Bourbon", origin: "Colombia", originId: "colombia",
     process: "Washed", roast: 2, notes: ["Red grape", "Hibiscus", "Panela"],
-    price: 24, size: "250g", color: "#de7e72", bag: "#efe6d4"
+    price: 24, size: "250g", color: "#de7e72", bag: "#ffffff"
   },
   {
     id: "nyeri-aa", type: "coffee", name: "Nyeri AA", origin: "Kenya", originId: "kenya",
     process: "Washed", roast: 1, notes: ["Blackcurrant", "Grapefruit", "Molasses"],
-    price: 25, size: "250g", color: "#8d3b4a", bag: "#efe6d4", tag: "Limited"
+    price: 25, size: "250g", color: "#8d3b4a", bag: "#ffffff", tag: "Limited"
   },
   {
     id: "huehuetenango", type: "coffee", name: "Huehuetenango", origin: "Guatemala", originId: "guatemala",
     process: "Washed", roast: 3, notes: ["Milk chocolate", "Almond", "Red apple"],
-    price: 20, size: "250g", color: "#c98d4f", bag: "#efe6d4"
+    price: 20, size: "250g", color: "#c98d4f", bag: "#ffffff"
   },
   {
     id: "cerrado-natural", type: "coffee", name: "Cerrado Natural", origin: "Brazil", originId: "brazil",
     process: "Natural", roast: 3, notes: ["Cocoa", "Hazelnut", "Brown sugar"],
-    price: 18, size: "250g", color: "#7c9a6b", bag: "#efe6d4"
+    price: 18, size: "250g", color: "#7c9a6b", bag: "#ffffff"
   },
   {
     id: "aceh-gayo", type: "coffee", name: "Aceh Gayo", origin: "Indonesia", originId: "indonesia",
     process: "Wet-hulled", roast: 4, notes: ["Cedar", "Dark chocolate", "Clove"],
-    price: 20, size: "250g", color: "#4f6d7a", bag: "#efe6d4"
+    price: 20, size: "250g", color: "#4f6d7a", bag: "#ffffff"
   },
   {
     id: "house-espresso", type: "coffee", name: "House Espresso", origin: "Brazil · Colombia · Ethiopia", originId: null,
@@ -176,11 +176,11 @@ SHOP.art = {
       <path d="M32 38 l6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5" fill="none" stroke="${ink}" stroke-opacity=".25"/>
       <circle cx="100" cy="62" r="6" fill="none" stroke="${ink}" stroke-opacity=".3"/>
       <rect x="48" y="88" width="104" height="128" rx="2" fill="${p.color}"/>
-      <text x="100" y="124" text-anchor="middle" font-family="Instrument Serif, serif" font-size="25" fill="#161613">Naughty</text>
+      <text x="100" y="124" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="19" letter-spacing="-0.5" fill="#161613">Naughty</text>
       <line x1="62" y1="136" x2="138" y2="136" stroke="#161613" stroke-opacity=".5"/>
-      <text x="100" y="158" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" letter-spacing="1.6" fill="#161613">${origin}</text>
-      <text x="100" y="176" text-anchor="middle" font-family="Instrument Serif, serif" font-style="italic" font-size="13" fill="#161613">${p.name}</text>
-      <text x="100" y="204" text-anchor="middle" font-family="DM Mono, monospace" font-size="7" letter-spacing="1.2" fill="#161613" opacity=".7">${(p.size || "").toUpperCase()} · ${p.process.toUpperCase()}</text>
+      <text x="100" y="158" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" letter-spacing="1.6" fill="#161613">${origin}</text>
+      <text x="100" y="176" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="9" fill="#161613">${p.name}</text>
+      <text x="100" y="204" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" letter-spacing="1.2" fill="#161613" opacity=".7">${(p.size || "").toUpperCase()} · ${p.process.toUpperCase()}</text>
     </svg>`;
   },
   tee(p) {
@@ -189,8 +189,8 @@ SHOP.art = {
       <path d="M86 22 Q120 44 154 22" fill="none" stroke="#161613" stroke-opacity=".25" stroke-width="3"/>
       <circle cx="120" cy="98" r="22" fill="${p.print}"/>
       <path d="M108 104 q12 -22 24 -12" fill="none" stroke="${p.color}" stroke-width="3" stroke-linecap="round"/>
-      <text x="120" y="142" text-anchor="middle" font-family="Instrument Serif, serif" font-size="19" fill="${p.print}">Naughty</text>
-      <text x="120" y="156" text-anchor="middle" font-family="DM Mono, monospace" font-size="6" letter-spacing="1.5" fill="${p.print}">ROASTERY · KITCHEN</text>
+      <text x="120" y="142" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="15" letter-spacing="-0.3" fill="${p.print}">Naughty</text>
+      <text x="120" y="156" text-anchor="middle" font-family="Inter, sans-serif" font-size="6" letter-spacing="1.5" fill="${p.print}">ROASTERY · KITCHEN</text>
     </svg>`;
   },
   cap(p) {
@@ -200,7 +200,7 @@ SHOP.art = {
       <path d="M44 128 Q120 146 200 128 Q226 140 226 152 Q140 172 70 158 Q40 150 44 128 Z" fill="${p.color}" stroke="#161613" stroke-opacity=".18"/>
       <ellipse cx="122" cy="44" rx="7" ry="3" fill="#161613" opacity=".3"/>
       <rect x="92" y="88" width="60" height="22" rx="2" fill="${p.print}"/>
-      <text x="122" y="104" text-anchor="middle" font-family="Instrument Serif, serif" font-size="13" fill="${p.color}">Naughty</text>
+      <text x="122" y="104" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="10" fill="${p.color}">Naughty</text>
     </svg>`;
   },
   beanie(p) {
@@ -213,7 +213,7 @@ SHOP.art = {
       <rect x="44" y="136" width="152" height="54" rx="6" fill="#000" opacity=".08"/>
       ${ribs}
       <rect x="94" y="150" width="52" height="24" rx="2" fill="${p.print}"/>
-      <text x="120" y="166" text-anchor="middle" font-family="Instrument Serif, serif" font-size="11" fill="${p.color}">Naughty</text>
+      <text x="120" y="166" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="8.5" fill="${p.color}">Naughty</text>
     </svg>`;
   },
   forProduct(p) {

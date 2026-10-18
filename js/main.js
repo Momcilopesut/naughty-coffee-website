@@ -254,7 +254,7 @@
     }
     const lines = [[23.44, "Tropic of Cancer"], [0, "Equator"], [-23.44, "Tropic of Capricorn"]].map(([lat, name]) =>
       `<line x1="0" x2="${W}" y1="${ty(lat)}" y2="${ty(lat)}" stroke="#161613" stroke-opacity="${lat === 0 ? 0.35 : 0.2}" stroke-dasharray="${lat === 0 ? "0" : "3 5"}"/>
-       <text x="${W - 6}" y="${ty(lat) - 6}" text-anchor="end" font-family="DM Mono, monospace" font-size="10" letter-spacing="1" fill="#55534b">${name.toUpperCase()}</text>`).join("");
+       <text x="${W - 6}" y="${ty(lat) - 6}" text-anchor="end" font-family="Inter, sans-serif" font-size="11" fill="#6b6a66">${name}</text>`).join("");
     const pins = SHOP.origins.map((o) => {
       const [x, y] = px(o.coords);
       const side = labelSide[o.id];
@@ -335,9 +335,11 @@
     </a></li>`).join("");
   });
 
-  /* ---------------- Marquee (duplicate content for a seamless loop) ---------------- */
+  /* ---------------- Hero bags ---------------- */
 
-  $$(".marquee-track").forEach((t) => { t.innerHTML += t.innerHTML; });
+  $$("[data-hero-bags]").forEach((el) => {
+    el.innerHTML = el.dataset.heroBags.split(" ").map((id) => SHOP.art.forProduct(byId(id))).join("");
+  });
 
   /* ---------------- Newsletter ---------------- */
 

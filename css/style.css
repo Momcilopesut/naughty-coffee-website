@@ -5,6 +5,8 @@
    ========================================================================== */
 
 :root {
+  --ticker-h: 34px;
+  --header-h: calc(76px + var(--ticker-h));
   --bg: #f6f6f5;
   --ink: #111111;
   --body: #4a4a48;      /* paragraph grey */
@@ -128,7 +130,7 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 .menu-open .menu-toggle span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
 .nav {
-  position: fixed; inset: 76px 0 0 0; z-index: 55; background: var(--bg);
+  position: fixed; inset: var(--header-h) 0 0 0; z-index: 55; background: var(--bg);
   display: flex; flex-direction: column; justify-content: space-between; gap: 32px;
   padding: clamp(24px, 4vw, 56px) var(--gutter) var(--gutter);
   opacity: 0; visibility: hidden; transition: opacity .3s var(--ease), visibility .3s;
@@ -166,22 +168,22 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 /* ---------- Hero ---------- */
 
 /* Film header: full-bleed looping video, dimmed, with the headline set over it. */
-.hero--film { position: relative; padding: 0; min-height: min(92vh, 900px); min-height: min(92svh, 900px); display: flex; align-items: flex-end; overflow: hidden; background: #1a1714; color: #f6f6f5; margin-top: -76px; }
+.hero--film { position: relative; padding: 0; min-height: min(92vh, 900px); min-height: min(92svh, 900px); display: flex; align-items: flex-end; overflow: hidden; background: #1a1714; color: #f6f6f5; margin-top: calc(-1 * var(--header-h)); }
 .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,9,8,.45) 0%, rgba(10,9,8,.12) 30%, rgba(10,9,8,.2) 55%, rgba(10,9,8,.72) 100%); }
-.hero-over { position: relative; padding-top: 140px; padding-bottom: clamp(40px, 6vw, 80px); }
+.hero-over { position: relative; padding-top: calc(64px + var(--header-h)); padding-bottom: clamp(40px, 6vw, 80px); }
 .hero--film .hero-intro { margin-top: 0; }
 .hero--film .statement { color: #fff; text-shadow: 0 2px 30px rgba(0,0,0,.25); }
 .hero--film .label { color: rgba(255,255,255,.88); }
 /* phones: the film fills exactly the visible screen */
 @media (max-width: 760px) {
   .hero--film { min-height: 100vh; min-height: 100svh; }
-  .hero-over { padding-top: 96px; }
+  .hero-over { padding-top: calc(20px + var(--header-h)); }
 }
 /* phones held sideways: short screen, so size the type by height and drop the label column */
 @media (max-height: 520px) and (orientation: landscape) {
   .hero--film { min-height: 100vh; min-height: 100svh; }
-  .hero-over { padding-top: 76px; padding-bottom: 24px; }
+  .hero-over { padding-top: var(--header-h); padding-bottom: 24px; }
   .hero--film .hero-intro { grid-template-columns: 1fr; }
   .hero--film .hero-intro > div:first-child { display: none; }
   .hero--film .statement { font-size: clamp(22px, 7.5vh, 40px); max-width: 26ch; }
@@ -331,7 +333,7 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 @keyframes pulse { 0% { opacity: .6; transform: scale(1); } 100% { opacity: 0; transform: scale(3.2); } }
 
 .stories { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(32px, 4vw, 64px); }
-.stories-aside { position: sticky; top: 110px; align-self: start; }
+.stories-aside { position: sticky; top: calc(34px + var(--header-h)); align-self: start; }
 .toc { list-style: none; padding: 0; margin: 16px 0 0; }
 .toc a { display: block; padding: 4px 0; text-decoration: none; color: var(--muted); font-size: clamp(22px, 2.4vw, 34px); font-weight: 700; text-transform: uppercase; letter-spacing: -.05em; line-height: 1.05; transition: color .2s; }
 .toc a.is-active, .toc a:hover { color: var(--ink); }
@@ -342,7 +344,7 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
   .toc a { font-size: 18px; }
 }
 
-.story { padding: 0 0 clamp(64px, 8vw, 112px); scroll-margin-top: 110px; }
+.story { padding: 0 0 clamp(64px, 8vw, 112px); scroll-margin-top: calc(34px + var(--header-h)); }
 .story + .story { padding-top: clamp(48px, 6vw, 80px); border-top: 1px solid var(--line); }
 .story-head { display: grid; gap: 10px; margin-bottom: 20px; }
 .story .h3 { margin-bottom: 4px; }
@@ -427,7 +429,7 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 .jump { display: flex; gap: 24px; margin: 20px 0 clamp(48px, 6vw, 80px); }
 
 /* Journal */
-.article { display: grid; grid-template-columns: 1fr 2fr; gap: 20px clamp(24px, 4vw, 64px); padding: clamp(48px, 6vw, 96px) 0; border-top: 1px solid var(--line); scroll-margin-top: 90px; }
+.article { display: grid; grid-template-columns: 1fr 2fr; gap: 20px clamp(24px, 4vw, 64px); padding: clamp(48px, 6vw, 96px) 0; border-top: 1px solid var(--line); scroll-margin-top: calc(14px + var(--header-h)); }
 .article .figure { aspect-ratio: 16 / 10; margin: 8px 0 12px; }
 .article h2 { font-size: clamp(30px, 3.6vw, 52px); font-weight: 700; text-transform: uppercase; letter-spacing: -.05em; line-height: 1; margin: 0; }
 .article .text + .text { margin-top: 1em; }
@@ -530,3 +532,11 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
   .tick-num .strip { transition: none; }
   .live-dot { animation: none; }
 }
+
+/* thin bar version at the top of every page, inside the sticky header */
+.ticker--bar { height: var(--ticker-h); border-top: 0; position: relative; z-index: 2; }
+.ticker--bar .tick { padding: 0 20px; height: var(--ticker-h); font-size: 12px; gap: 8px; }
+.ticker--bar .tick-num { font-size: 13px; }
+.ticker--bar .tick-chg { font-size: 11px; }
+.ticker--bar .live-dot { width: 7px; height: 7px; }
+@media (max-width: 520px) { :root { --ticker-h: 30px; } .ticker--bar .tick { padding: 0 14px; font-size: 11px; } .ticker--bar .tick-num { font-size: 12px; } }

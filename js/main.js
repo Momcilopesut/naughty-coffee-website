@@ -351,27 +351,98 @@
 
   /* ---------------- Sales ticker ---------------- */
 
+  // Numbers roll like an odometer: each digit is a 0–9 strip slid into place.
+  function setOdo(el, n) {
+    const text = n.toLocaleString("en-US");
+    if (el.dataset.len !== String(text.length)) {
+      el.innerHTML = [...text].map((ch) => /\d/.test(ch)
+        ? `<span class="d"><span class="strip">${"0123456789".split("").map((x) => `<span>${x}</span>`).join("")}</span></span>`
+        : `<span class="sep">${ch}</span>`).join("");
+      el.dataset.len = text.length;
+    }
+    const strips = el.querySelectorAll(".strip");
+    [...text.replace(/\D/g, "")].forEach((ch, i) => { strips[i].style.transform = `translateY(-${ch * 1.2}em)`; });
+  }
+
   $$("[data-ticker]").forEach((el) => {
-    const { cupsPerDay, years, mix } = SHOP.sales;
+    const { cupsPerDay, years, mix, opens = 7, closes = 19 } = SHOP.sales;
     const total = cupsPerDay * 365 * years;
     // largest-remainder rounding so the drinks add up exactly to the total
     const raw = mix.map((m) => m.share * total);
     const cups = raw.map(Math.floor);
-    let left = total - cups.reduce((a, b) => a + b, 0);
+    const left = total - cups.reduce((a, b) => a + b, 0);
     raw.map((r, i) => [r - cups[i], i]).sort((a, b) => b[0] - a[0]).slice(0, left).forEach(([, i]) => cups[i]++);
+
+    const openMinutes = (closes - opens) * 60;
+    const isOpen = () => { const h = new Date().getHours(); return h >= opens && h < closes; };
+    const cupsToday = () => {
+      const d = new Date(), mins = (d.getHours() - opens) * 60 + d.getMinutes();
+      return Math.round(cupsPerDay * Math.min(Math.max(mins, 0), openMinutes) / openMinutes);
+    };
+    const today0 = cupsToday();
+    // the three-year figure is the running total, so today's cups so far are part of it
+    const values = { total, today: today0, perDay: cupsPerDay };
+    mix.forEach((m, i) => { values["d" + i] = cups[i]; });
+
     const fmt = (n) => n.toLocaleString("en-US");
-    const item = (name, value, change) => {
+    const item = (key, name, change = null) => {
       const up = change >= 0;
-      return `<span class="tick"><b>${name.toUpperCase()}</b><span class="tick-num">${fmt(value)}</span>` +
+      return `<span class="tick" data-tick="${key}"><b>${name.toUpperCase()}</b><span class="tick-num" data-odo="${key}"></span>` +
         (change === null ? "" : `<span class="tick-chg ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${Math.abs(change).toFixed(1)}%</span>`) + `</span>`;
     };
     const items = [
-      item(`Cups sold · ${years} yrs`, total, null),
-      item("Cups / day", cupsPerDay, null),
-      ...mix.map((m, i) => item(m.name, cups[i], m.change))
+      `<span class="tick tick-live"><span class="live-dot"></span><b data-live-label>LIVE</b></span>`,
+      item("total", `Cups sold · ${years} yrs`),
+      item("today", "Cups today"),
+      item("perDay", "Cups / day"),
+      ...mix.map((m, i) => item("d" + i, m.name, m.change))
     ].join("");
     el.innerHTML = `<div class="ticker-track"><div class="ticker-set">${items}</div><div class="ticker-set" aria-hidden="true">${items}</div></div>`;
     el.setAttribute("aria-label", `${fmt(total)} cups sold over ${years} years: ` + mix.map((m, i) => `${m.name} ${fmt(cups[i])}`).join(", "));
+
+    const show = (key) => $$(`[data-odo="${key}"]`, el).forEach((o) => setOdo(o, values[key]));
+    const showAll = () => Object.keys(values).forEach(show);
+    const setLive = () => {
+      const open = isOpen();
+      el.classList.toggle("is-closed", !open);
+      $$("[data-live-label]", el).forEach((l) => { l.textContent = open ? "LIVE" : "CLOSED · OPENS " + opens + "AM"; });
+    };
+
+    // start every number at zero (same width), then roll up when the ticker comes into view
+    Object.keys(values).forEach((k) => $$(`[data-odo="${k}"]`, el).forEach((o) => {
+      setOdo(o, values[k]);
+      o.querySelectorAll(".strip").forEach((st) => { st.style.transition = "none"; st.style.transform = "translateY(0)"; });
+    }));
+    setLive();
+    let rolled = false;
+    const rollIn = () => {
+      if (rolled) return; rolled = true;
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        el.querySelectorAll(".strip").forEach((st) => { st.style.transition = ""; });
+        showAll();
+      }));
+    };
+    if ("IntersectionObserver" in window && !reduceMotion) {
+      const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { rollIn(); io.disconnect(); } }, { threshold: .3 });
+      io.observe(el);
+    } else rollIn();
+
+    // live sales: one cup every ~86 s on average (500 cups over a 12-hour day), drink picked by sales mix
+    const meanGap = openMinutes * 60000 / cupsPerDay;
+    const pick = () => { let r = Math.random(), i = 0; while (i < mix.length - 1 && (r -= mix[i].share) > 0) i++; return i; };
+    const sell = () => {
+      if (isOpen() && values.today < cupsPerDay) {
+        const i = pick();
+        values["d" + i]++; values.total++; values.today++;
+        ["d" + i, "total", "today"].forEach(show);
+        $$(`[data-tick="d${i}"], [data-tick="total"], [data-tick="today"]`, el).forEach((t) => {
+          t.classList.remove("flash"); void t.offsetWidth; t.classList.add("flash");
+        });
+      }
+      setLive();
+      setTimeout(sell, Math.min(Math.max(-Math.log(1 - Math.random()) * meanGap, 8000), 240000));
+    };
+    setTimeout(sell, 6000 + Math.random() * 10000);
   });
 
   /* ---------------- Hero bags ---------------- */

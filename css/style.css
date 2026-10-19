@@ -510,8 +510,23 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 .tick-chg.up { color: #5fc27e; }
 .tick-chg.down { color: #e2574a; }
 @keyframes ticker { to { transform: translateX(-50%); } }
+.tick-num { display: inline-flex; align-items: flex-start; line-height: 1.2em; height: 1.2em; align-self: center; }
+.tick-num .d { display: block; height: 1.2em; overflow: hidden; }
+.tick-num .strip { display: block; transition: transform 1.6s cubic-bezier(.2, .8, .2, 1); }
+.tick-num .strip > span { display: block; height: 1.2em; line-height: 1.2em; }
+.tick-num .sep { display: block; height: 1.2em; }
+.tick { align-items: center; }
+.tick.flash { animation: tick-flash 1.4s ease-out; }
+@keyframes tick-flash { 0% { background: rgba(95, 194, 126, .28); } 100% { background: transparent; } }
+.tick-live { gap: 8px; }
+.tick-live b { color: #f6f6f5; font-weight: 600; letter-spacing: .08em; }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2574a; align-self: center; animation: live 1.4s ease-in-out infinite; }
+@keyframes live { 50% { opacity: .25; } }
+.ticker.is-closed .live-dot { background: #6b6b68; animation: none; }
 @media (prefers-reduced-motion: reduce) {
   .ticker { overflow-x: auto; }
   .ticker-track { animation: none; }
   .ticker-set[aria-hidden] { display: none; }
+  .tick-num .strip { transition: none; }
+  .live-dot { animation: none; }
 }

@@ -1,6 +1,6 @@
 """Cut the header film from real photos and footage.
 
-Photos get a slow camera move (zoom + drift); the café walkthrough is real video.
+Photos are still slides; the café walkthrough is real video.
 Shots are joined with crossfades, then the end is blended into the start so the
 20-second loop has no visible jump. Two framings are rendered: 16:9 for desktop
 and 2:3 for phones.
@@ -40,31 +40,21 @@ def aspect_box(w, h, aspect, fx, fy):
     return int(bw), int(bh), int(x), int(y)
 
 
-def shot_photo(src, dur, z0, z1, f0, f1, W, H, out):
+def shot_photo(src, dur, f, W, H, out):
+    """A still slide: crop to the frame's shape around the focus point, no camera move."""
     from PIL import Image
     w, h = Image.open(src).size
-    # crop a box that covers both focus points, then let zoompan move inside it
-    fx, fy = (f0[0] + f1[0]) / 2, (f0[1] + f1[1]) / 2
-    bw, bh, bx, by = aspect_box(w, h, W / H, fx, fy)
-    n = int(dur * FPS)
-    # pan target expressed inside the crop box
-    px0, py0 = (f0[0] * w - bx) / bw, (f0[1] * h - by) / bh
-    px1, py1 = (f1[0] * w - bx) / bw, (f1[1] * h - by) / bh
-    k = f"(on/{n - 1})"
-    ease = f"(0.5-0.5*cos(PI*{k}))"
-    z = f"({z0}+({z1}-{z0})*{ease})"
-    px = f"({px0}+({px1}-{px0})*{ease})"
-    py = f"({py0}+({py1}-{py0})*{ease})"
-    vf = (f"crop={bw}:{bh}:{bx}:{by},scale={W * 3}:{H * 3},"
-          f"zoompan=z='{z}':x='max(0,min(iw-iw/zoom,{px}*iw-iw/zoom/2))':y='max(0,min(ih-ih/zoom,{py}*ih-ih/zoom/2))'"
-          f":d={n}:s={W}x{H}:fps={FPS},{GRADE},format=yuv420p")
-    run(["-loop", "1", "-i", src, "-vf", vf, "-frames:v", str(n), "-c:v", "libx264", "-crf", "16", "-preset", "fast", out])
+    bw, bh, bx, by = aspect_box(w, h, W / H, f[0], f[1])
+    vf = (f"crop={bw}:{bh}:{bx}:{by},scale={W}:{H}:flags=lanczos,unsharp=5:5:0.6,"
+          f"fps={FPS},{GRADE},format=yuv420p")
+    run(["-loop", "1", "-framerate", str(FPS), "-i", src, "-vf", vf, "-t", str(dur),
+         "-c:v", "libx264", "-crf", "12", "-preset", "fast", "-tune", "stillimage", out])
 
 
 def shot_video(src, dur, f, W, H, out):
     cw, ch = map(int, WALK_CROP.split(":")[:2])
     bw, bh, bx, by = aspect_box(cw, ch, W / H, f[0], f[1])
-    vf = f"crop={WALK_CROP},crop={bw}:{bh}:{bx}:{by},scale={W}:{H},fps={FPS},{GRADE},format=yuv420p"
+    vf = f"crop={WALK_CROP},crop={bw}:{bh}:{bx}:{by},scale={W}:{H}:flags=lanczos,fps={FPS},{GRADE},format=yuv420p"
     run(["-ss", str(WALK_START), "-t", str(dur), "-i", src, "-vf", vf, "-an", "-c:v", "libx264", "-crf", "16", "-preset", "fast", out])
 
 
@@ -75,7 +65,7 @@ def render(W, H, tag, tmp):
         if src == WALK:
             shot_video(src, dur, f0, W, H, out)
         else:
-            shot_photo(src, dur, z0, z1, f0, f1, W, H, out)
+            shot_photo(src, dur, f1, W, H, out)
         parts.append((out, dur))
 
     # chain crossfades into one sequence
@@ -88,7 +78,7 @@ def render(W, H, tag, tmp):
         chain.append(f"[{label}][{i}:v]xfade=transition=fade:duration={XF}:offset={off:.3f}[{nxt}]")
         label, t = nxt, off + parts[i][1]
     seq = os.path.join(tmp, f"{tag}-seq.mp4")
-    run([*inputs, "-filter_complex", ";".join(chain), "-map", f"[{label}]", "-c:v", "libx264", "-crf", "16", "-preset", "fast", seq])
+    run([*inputs, "-filter_complex", ";".join(chain), "-map", f"[{label}]", "-c:v", "libx264", "-crf", "12", "-preset", "fast", seq])
 
     # loop: blend the last XF seconds into the first XF seconds, drop the head
     total = t
@@ -98,13 +88,13 @@ def render(W, H, tag, tmp):
             f"[tail][head]xfade=transition=fade:duration={XF}:offset=0[blend];"
             f"[body][blend]concat=n=2:v=1[out]")
     mp4 = os.path.join(OUT, f"hero-film{tag}.mp4")
-    run(["-i", seq, "-filter_complex", loop, "-map", "[out]", "-an", "-c:v", "libx264", "-preset", "slow", "-crf", "26",
+    run(["-i", seq, "-filter_complex", loop, "-map", "[out]", "-an", "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-profile:v", "high",
          "-pix_fmt", "yuv420p", "-movflags", "+faststart", mp4])
-    run(["-i", mp4, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "36", "-row-mt", "1", "-deadline", "good", "-cpu-used", "4",
+    run(["-i", mp4, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "28", "-row-mt", "1", "-deadline", "good", "-cpu-used", "4",
          "-an", os.path.join(OUT, f"hero-film{tag}.webm")])
     print(tag, "done", round(total - XF, 2), "s")
 
 
 with tempfile.TemporaryDirectory() as tmp:
-    render(1280, 720, "", tmp)
-    render(720, 1080, "-portrait", tmp)
+    render(1920, 1080, "", tmp)
+    render(1080, 1620, "-portrait", tmp)

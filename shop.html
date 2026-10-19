@@ -32,6 +32,7 @@
         <a href="menu.html"><small>(03)</small>Menu</a>
         <a href="origins.html"><small>(04)</small>Origins</a>
         <a href="about.html"><small>(05)</small>Roastery</a>
+        <a href="journal.html"><small>(06)</small>Journal</a>
     </div>
     <div class="nav-info">
       <div><span class="label">Visit</span>12 Harbour Lane<br>Your City 10001</div>
@@ -51,15 +52,16 @@
 
 <section class="section--tight" style="padding-top:0">
   <div class="wrap">
-    <div class="shop-bar">
-      <div class="filters" role="group" aria-label="Filter products">
-        <button class="chip" data-filter="all" aria-pressed="true">All</button>
-        <button class="chip" data-filter="coffee" aria-pressed="false">Coffee</button>
-        <button class="chip" data-filter="apparel" aria-pressed="false">Merch</button>
-      </div>
-      <span class="label muted">Free shipping over €45</span>
+    <h2 class="all-products">(All products)</h2>
+    <nav class="jump" aria-label="Shop sections"><a class="link" href="#coffee">Coffee</a><a class="link" href="#apparel">Merchandise</a><span class="label muted" style="margin-left:auto">Free shipping over €45</span></nav>
+    <div class="shop-section" id="coffee" style="scroll-margin-top:90px">
+      <div class="shop-section-head"><h2>Coffee</h2><label class="sort"><span style="position:absolute;left:-9999px">Sort products</span><select data-sort="#grid-coffee"><option value="featured">Sort by</option><option value="price-asc">Price: low to high</option><option value="price-desc">Price: high to low</option><option value="name">Name: A–Z</option></select></label></div>
+      <div class="product-grid" id="grid-coffee" data-products="coffee"></div>
     </div>
-    <div class="product-grid" data-products="all"></div>
+    <div class="shop-section" id="apparel" style="scroll-margin-top:90px">
+      <div class="shop-section-head"><h2>Merchandise</h2><label class="sort"><span style="position:absolute;left:-9999px">Sort products</span><select data-sort="#grid-apparel"><option value="featured">Sort by</option><option value="price-asc">Price: low to high</option><option value="price-desc">Price: high to low</option><option value="name">Name: A–Z</option></select></label></div>
+      <div class="product-grid" id="grid-apparel" data-products="apparel"></div>
+    </div>
   </div>
 </section>
 
@@ -75,7 +77,14 @@
 </main>
 <footer class="site-footer">
   <div class="wrap">
-    <p class="footer-statement">Coffee bar. Roastery. Kitchen. One room.</p>
+    <div class="footer-top">
+      <div>
+        <span class="label">Coffee bar</span>
+        <span class="label">Kitchen</span>
+        <span class="label">Roastery</span>
+      </div>
+      <a class="footer-statement" href="about.html#visit">Come and<br>visit us →</a>
+    </div>
     <div class="footer-grid">
       <div>
         <h4>(Newsletter)</h4>
@@ -95,7 +104,7 @@
         <h4>(Shop)</h4>
         <ul>
           <li><a href="shop.html#coffee">Coffee</a></li>
-          <li><a href="shop.html#apparel">Merch</a></li>
+          <li><a href="shop.html#apparel">Merchandise</a></li>
           <li><a href="menu.html">Menu</a></li>
         </ul>
       </div>
@@ -104,7 +113,7 @@
         <ul>
           <li><a href="mailto:hello@kumcoffee.example">Email</a></li>
           <li><a href="https://instagram.com" rel="noopener">Instagram</a></li>
-          <li><a href="origins.html">Origins</a></li>
+          <li><a href="journal.html">Journal</a></li>
         </ul>
       </div>
     </div>

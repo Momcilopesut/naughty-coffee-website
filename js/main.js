@@ -175,8 +175,8 @@
   }
 
   function productCard(p, i) {
-    const opts = p.type === "coffee" ? SHOP.grinds : p.sizes;
-    const optLabel = p.type === "coffee" ? "Grind" : "Size";
+    const opts = p.options || (p.type === "coffee" ? SHOP.grinds : p.sizes);
+    const optLabel = p.type === "coffee" && !p.options ? "Grind" : "Size";
     const select = opts.length > 1
       ? `<select class="select" aria-label="${optLabel} for ${p.name}" data-option>${opts.map((o) => `<option>${o}</option>`).join("")}</select>`
       : `<span class="mono muted" data-option-fixed="${opts[0]}">${opts[0]}</span>`;
@@ -185,7 +185,7 @@
          <div class="notes">${p.notes.map((n) => `<span>${n}</span>`).join("")}</div>
          ${roastDots(p.roast)}`
       : `<p class="card-meta">${p.origin}</p>`;
-    return `<article class="card reveal" data-type="${p.type}" style="--tint:${p.color}">
+    return `<article class="card reveal" data-type="${p.type}" data-price="${p.price}" data-name="${p.name}" data-order="${i}" style="--tint:${p.color}">
       <div class="card-media">
         ${p.tag ? `<span class="card-tag">${p.tag}</span>` : ""}
         ${SHOP.art.forProduct(p)}
@@ -212,6 +212,20 @@
     const sel = $("[data-option]", card);
     const fixed = $("[data-option-fixed]", card);
     addToCart(btn.dataset.add, sel ? sel.value : fixed ? fixed.dataset.optionFixed : "");
+  });
+
+  /* Sort-by selects reorder the product grid that follows them */
+  $$("[data-sort]").forEach((sel) => {
+    const grid = $(sel.dataset.sort);
+    sel.addEventListener("change", () => {
+      const key = sel.value;
+      const cards = $$(".card", grid).sort((a, b) =>
+        key === "price-asc" ? a.dataset.price - b.dataset.price :
+        key === "price-desc" ? b.dataset.price - a.dataset.price :
+        key === "name" ? a.dataset.name.localeCompare(b.dataset.name) :
+        a.dataset.order - b.dataset.order);
+      cards.forEach((c) => grid.appendChild(c));
+    });
   });
 
   /* Shop filters */
@@ -275,7 +289,7 @@
   const storiesEl = $("[data-stories]");
   if (storiesEl) {
     storiesEl.innerHTML = SHOP.origins.map((o, i) => {
-      const beans = SHOP.products.filter((p) => p.originId === o.id);
+      const beans = SHOP.products.filter((p) => p.originId === o.id && !p.kind);
       const lat = `${Math.abs(o.coords[1]).toFixed(1)}°${o.coords[1] >= 0 ? "N" : "S"}`;
       const lon = `${Math.abs(o.coords[0]).toFixed(1)}°${o.coords[0] >= 0 ? "E" : "W"}`;
       return `<article class="story" id="${o.id}">

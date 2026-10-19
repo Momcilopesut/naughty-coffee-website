@@ -49,14 +49,25 @@ SHOP.products = [
     price: 19, size: "250g", color: "#9a8fbf", bag: "#1f2b22"
   },
 
+  {
+    id: "drip-guji", type: "coffee", kind: "drip", name: "Drip Coffee — Guji Hambela", origin: "Ethiopia", originId: "ethiopia",
+    process: "Washed", roast: 1, notes: ["Jasmine", "Bergamot"],
+    price: 16, size: "10 × 12g", color: "#e9a23b", options: ["Box of 10"], tag: "New"
+  },
+  {
+    id: "drip-huila", type: "coffee", kind: "drip", name: "Drip Coffee — Huila Pink Bourbon", origin: "Colombia", originId: "colombia",
+    process: "Washed", roast: 2, notes: ["Red grape", "Panela"],
+    price: 17, size: "10 × 12g", color: "#d9a0c4", options: ["Box of 10"]
+  },
+
   // ---- Apparel ----
   {
     id: "logo-tee", type: "apparel", kind: "tee", name: "Kumcoffee Logo Tee", origin: "Heavyweight organic cotton",
-    price: 32, color: "#f3efe6", print: "#1f2b22", sizes: ["S", "M", "L", "XL"]
+    price: 32, color: "#151515", print: "#f6f6f5", sizes: ["S", "M", "L", "XL"]
   },
   {
     id: "roaster-tee", type: "apparel", kind: "tee", name: "Roaster Tee", origin: "Garment-dyed, 240gsm",
-    price: 34, color: "#1f2b22", print: "#e7b24c", sizes: ["S", "M", "L", "XL"], tag: "Staff favourite"
+    price: 34, color: "#ecebe7", print: "#151515", sizes: ["S", "M", "L", "XL"], tag: "Staff favourite"
   },
   {
     id: "field-cap", type: "apparel", kind: "cap", name: "Field Cap", origin: "Washed cotton twill",
@@ -164,33 +175,56 @@ SHOP.menu = {
 /* ---------- Illustrations (generated SVG so the site needs no photos) ---------- */
 
 SHOP.art = {
-  bag(p) {
-    const dark = p.bag === "#1f2b22";
-    const ink = dark ? "#f3efe6" : "#161613";
-    const origin = (p.origin || "").split(" · ")[0].toUpperCase();
-    return `<svg viewBox="0 0 200 260" aria-hidden="true">
-      <path d="M34 34 H166 L176 244 Q100 254 24 244 Z" fill="${p.bag}"/>
-      <path d="M34 34 H166 L176 244 Q100 254 24 244 Z" fill="url(#shade-${p.id})" opacity=".5"/>
-      <defs><linearGradient id="shade-${p.id}" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".12"/><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset=".85" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".14"/></linearGradient></defs>
-      <rect x="32" y="12" width="136" height="26" fill="${p.bag}"/>
-      <path d="M32 38 l6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5 6 -5 6 5" fill="none" stroke="${ink}" stroke-opacity=".25"/>
-      <circle cx="100" cy="62" r="6" fill="none" stroke="${ink}" stroke-opacity=".3"/>
-      <rect x="48" y="88" width="104" height="128" rx="2" fill="${p.color}"/>
-      <text x="100" y="124" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="600" font-size="15" letter-spacing="-0.4" fill="#161613">Kumcoffee</text>
-      <line x1="62" y1="136" x2="138" y2="136" stroke="#161613" stroke-opacity=".5"/>
-      <text x="100" y="158" text-anchor="middle" font-family="Inter Tight, sans-serif" font-size="8" letter-spacing="1.6" fill="#161613">${origin}</text>
-      <text x="100" y="176" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="500" font-size="9" fill="#161613">${p.name}</text>
-      <text x="100" y="204" text-anchor="middle" font-family="Inter Tight, sans-serif" font-size="7" letter-spacing="1.2" fill="#161613" opacity=".7">${(p.size || "").toUpperCase()} · ${p.process.toUpperCase()}</text>
+  /* Coffee label: a white receipt card with a torn (zigzag) bottom edge. */
+  label(p) {
+    const o = SHOP.origins.find((x) => x.id === p.originId);
+    const country = (p.origin || "").split(" · ").length > 1 ? "Blend" : p.origin;
+    const lines = [
+      o ? o.region.split(",")[0] : p.origin,
+      p.process,
+      o ? o.altitude.replace(/,/g, "") : "Seasonal",
+      o ? o.varietals.split(" · ")[0] : "Rotating lots"
+    ].map((t) => t.toUpperCase());
+    let zig = "";
+    for (let x = 206; x > 34; x -= 8) zig += ` L${x - 4} 202 L${x - 8} 196`;
+    return `<svg viewBox="26 22 188 188" aria-hidden="true">
+      <path d="M34 30 H206 V196${zig} Z" fill="#fff"/>
+      <text x="120" y="56" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="600" font-size="9" letter-spacing="-0.2" fill="#111">(${p.name.toUpperCase()}, ${country.toUpperCase()})</text>
+      ${lines.map((t, i) => `<text x="48" y="${78 + i * 10}" font-family="Inter Tight, sans-serif" font-size="6.4" fill="#111">${t}</text>`).join("")}
+      <text x="48" y="132" font-family="Inter Tight, sans-serif" font-weight="600" font-size="6.4" fill="#111">(${p.notes.join(", ").toUpperCase()})</text>
+      <text x="48" y="176" font-family="Inter Tight, sans-serif" font-weight="700" font-size="9.5" letter-spacing="-0.4" fill="#111">KUM</text>
+      <text x="48" y="185" font-family="Inter Tight, sans-serif" font-weight="700" font-size="9.5" letter-spacing="-0.4" fill="#111">COFFEE.</text>
+      <circle cx="190" cy="178" r="5" fill="${p.color}"/>
+    </svg>`;
+  },
+  /* Drip-bag box: grey packet with a coloured panel. */
+  drip(p) {
+    const [, name] = p.name.split(" — ");
+    let zig = "";
+    for (let x = 192; x > 48; x -= 8) zig += ` L${x - 4} 150 L${x - 8} 145`;
+    let qr = "";
+    for (let i = 0; i < 25; i++) if ((i * 7 + 3) % 3) qr += `<rect x="${166 + (i % 5) * 3}" y="${170 + Math.floor(i / 5) * 3}" width="3" height="3" fill="#111"/>`;
+    return `<svg viewBox="0 0 240 240" aria-hidden="true">
+      <rect x="40" y="36" width="160" height="168" fill="#ecebe8"/>
+      <text x="52" y="58" font-family="Inter Tight, sans-serif" font-weight="700" font-size="7.5" letter-spacing="-0.3" fill="#111">KUM</text>
+      <text x="52" y="65" font-family="Inter Tight, sans-serif" font-weight="700" font-size="7.5" letter-spacing="-0.3" fill="#111">COFFEE.</text>
+      <text x="188" y="50" text-anchor="end" font-family="Inter Tight, sans-serif" font-size="4" fill="#111">POUR-OVER COFFEE</text>
+      <path d="M48 76 H192 V145${zig} Z" fill="${p.color}"/>
+      <text x="54" y="104" font-family="Inter Tight, sans-serif" font-weight="700" font-size="20" letter-spacing="-1.2" fill="#111">DRIP</text>
+      <text x="54" y="122" font-family="Inter Tight, sans-serif" font-weight="700" font-size="20" letter-spacing="-1.2" fill="#111">COFFEE.</text>
+      <text x="54" y="134" font-family="Inter Tight, sans-serif" font-weight="600" font-size="5.6" fill="#111">${name.toUpperCase()} (${p.origin.toUpperCase()})</text>
+      <text x="52" y="196" font-family="Inter Tight, sans-serif" font-size="4" fill="#111">(GROUND COFFEE)</text>
+      <text x="110" y="196" font-family="Inter Tight, sans-serif" font-size="4" fill="#111">${p.size.toUpperCase()}</text>
+      <text x="164" y="166" font-family="Inter Tight, sans-serif" font-size="3.6" fill="#111">(HOW TO BREW)</text>
+      ${qr}
     </svg>`;
   },
   tee(p) {
     return `<svg viewBox="0 0 240 240" aria-hidden="true">
       <path d="M86 22 Q120 44 154 22 L214 48 L198 100 L172 90 L172 222 L68 222 L68 90 L42 100 L26 48 Z" fill="${p.color}" stroke="#161613" stroke-opacity=".12"/>
       <path d="M86 22 Q120 44 154 22" fill="none" stroke="#161613" stroke-opacity=".25" stroke-width="3"/>
-      <circle cx="120" cy="98" r="22" fill="${p.print}"/>
-      <path d="M108 104 q12 -22 24 -12" fill="none" stroke="${p.color}" stroke-width="3" stroke-linecap="round"/>
-      <text x="120" y="142" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="600" font-size="12.5" letter-spacing="-0.3" fill="${p.print}">Kumcoffee</text>
-      <text x="120" y="156" text-anchor="middle" font-family="Inter Tight, sans-serif" font-size="6" letter-spacing="1.5" fill="${p.print}">ROASTERY · KITCHEN</text>
+      <text x="136" y="66" font-family="Inter Tight, sans-serif" font-weight="700" font-size="7" letter-spacing="-0.3" fill="${p.print}">KUM</text>
+      <text x="136" y="73" font-family="Inter Tight, sans-serif" font-weight="700" font-size="7" letter-spacing="-0.3" fill="${p.print}">COFFEE.</text>
     </svg>`;
   },
   cap(p) {
@@ -217,7 +251,8 @@ SHOP.art = {
     </svg>`;
   },
   forProduct(p) {
-    if (p.type === "coffee") return this.bag(p);
+    if (p.kind === "drip") return this.drip(p);
+    if (p.type === "coffee") return this.label(p);
     return this[p.kind] ? this[p.kind](p) : this.tee(p);
   },
   /* a small coffee-cherry branch used as a story icon */

@@ -44,14 +44,14 @@ The mark is a brush ensō (open zen circle) with a vermilion coffee-cherry dot.
 ## Header film
 
 `video/hero-film*.webm` / `.mp4` is a 20-second loop cut from the café's own photos and footage:
-coffee farm → roaster → storefront → walk through the café → hand pour → latte art. Photos are still
+coffee farm → roaster → storefront → walk through the café → hand pour → latte art → closing clip. Photos are still
 slides, shots crossfade, and the end blends into the start. There is a 1920×1080 cut for desktop and a
 1080×1620 cut (`-portrait`) for phones; the page picks one by screen shape.
 
 To swap a shot, edit the `SHOTS` list in `tools/hero-film/cut.py` and run (needs ffmpeg and Pillow):
 
 ```sh
-python3 tools/hero-film/cut.py path/to/cafe-walkthrough.mp4 video
+python3 tools/hero-film/cut.py path/to/cafe-walkthrough.mp4 path/to/ending.mov video
 ```
 
 `tools/hero-film/film.html` is the earlier illustrated version, kept for reference.

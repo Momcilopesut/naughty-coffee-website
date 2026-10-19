@@ -1,0 +1,396 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:#000}canvas{display:block}</style>
+</head><body>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>
+/* Kumcoffee header film — 20 s loop, rendered deterministically: window.render(t).
+   0–6.5 rural highlands at dawn · 6.5–7.5 mist · 7.5–14 city street at blue hour into the café
+   14–20 cappuccino with tulip latte art · loop closes through mist. */
+const W = 1280, H = 720, DUR = 20;
+const cv = document.getElementById("c"), g = cv.getContext("2d");
+
+/* ---------- helpers ---------- */
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, k) => a + (b - a) * k;
+const ease = (k) => k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+const smooth = (a, b, t) => ease(clamp((t - a) / (b - a)));
+function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+function noise1(x, seed) { // smooth value noise from summed sines
+  return Math.sin(x * 1.3 + seed) * .5 + Math.sin(x * 2.9 + seed * 1.7) * .25 + Math.sin(x * 6.1 + seed * .3) * .12 + Math.sin(x * 12.7 + seed * 2.1) * .05;
+}
+function grad(y0, y1, stops) {
+  const gr = g.createLinearGradient(0, y0, 0, y1);
+  stops.forEach(([o, c]) => gr.addColorStop(o, c));
+  return gr;
+}
+function rgba(hex, a) {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`;
+}
+
+/* ---------- ensō mark (same geometry as the site logo) ---------- */
+function ensoPts() {
+  const pts = [], inner = [], start = -62 * Math.PI / 180, sweep = 326 * Math.PI / 180, n = 120;
+  const width = (s) => s < .06 ? 2 + s / .06 * 5.5 : s < .55 ? 7.5 + 1.8 * Math.sin((s - .06) / .49 * Math.PI) : 7.5 - 6.3 * Math.pow((s - .55) / .45, 1.3);
+  for (let i = 0; i <= n; i++) {
+    const s = i / n, a = start - s * sweep, r = 39 + 1.1 * Math.sin(s * Math.PI * 2.6) - s, w = width(s), cx = 50 + .8 * Math.sin(s * 5);
+    pts.push([cx + (r + w / 2) * Math.cos(a), 50 + (r + w / 2) * Math.sin(a)]);
+    inner.push([cx + (r - w / 2) * Math.cos(a), 50 + (r - w / 2) * Math.sin(a)]);
+  }
+  return pts.concat(inner.reverse());
+}
+const ENSO = ensoPts();
+function drawEnso(x, y, size, ink, dot) {
+  const k = size / 100;
+  g.beginPath();
+  ENSO.forEach(([px, py], i) => i ? g.lineTo(x + px * k, y + py * k) : g.moveTo(x + px * k, y + py * k));
+  g.closePath(); g.fillStyle = ink; g.fill();
+  if (dot) { g.beginPath(); g.arc(x + 50 * k, y + 50 * k, 8.5 * k, 0, Math.PI * 2); g.fillStyle = dot; g.fill(); }
+}
+
+/* ---------- scene A: highlands at dawn ---------- */
+function ridge(t, camX, depth, base, amp, freq, seed, color, mistColor) {
+  const off = camX * depth;
+  g.beginPath(); g.moveTo(0, H);
+  for (let x = 0; x <= W; x += 8) {
+    const y = base - (noise1((x + off) / freq, seed) * .5 + .5) * amp;
+    g.lineTo(x, y);
+  }
+  g.lineTo(W, H); g.closePath();
+  g.fillStyle = color; g.fill();
+  if (mistColor) { // mist at the foot of each ridge
+    g.fillStyle = grad(base - amp * .2, base + 40, [[0, rgba(mistColor, 0)], [1, rgba(mistColor, .55)]]);
+    g.fillRect(0, base - amp * .2, W, amp * .2 + 60);
+  }
+}
+
+function coffeeRows(t, camX) {
+  // terraced hillside: curved rows of bushes, dotted with cherries
+  const off = camX * 1.1, R = rng(7);
+  for (let row = 0; row < 9; row++) {
+    const yBase = 470 + row * 30 + row * row * 2.2;
+    const s = .45 + row * .1; // bush scale grows toward the viewer
+    g.fillStyle = row % 2 ? "#2e4a33" : "#355539";
+    for (let i = -2; i < 34; i++) {
+      const x = ((i * 46 * s * 1.6 - off * (1 + row * .08)) % (W + 200) + W + 200) % (W + 200) - 100;
+      const y = yBase + Math.sin((x + row * 60) / 260) * 14;
+      g.beginPath(); g.ellipse(x, y, 26 * s, 16 * s, 0, 0, Math.PI * 2); g.fill();
+      if (row > 3) { // cherries
+        for (let c = 0; c < 3; c++) {
+          g.fillStyle = c % 2 ? "#a3271f" : "#c4382a";
+          g.beginPath(); g.arc(x + (c - 1) * 7 * s, y + 4 * s + (c % 2) * 3, 3.2 * s, 0, Math.PI * 2); g.fill();
+        }
+        g.fillStyle = row % 2 ? "#2e4a33" : "#355539";
+      }
+    }
+  }
+}
+
+function branch(t, camX) {
+  // foreground coffee branch entering from the top right, swaying slightly
+  const sway = Math.sin(t * 1.1) * 4, ox = 1010 - camX * 1.8, oy = -30;
+  g.save(); g.translate(ox, oy); g.rotate((sway - 8) * Math.PI / 180);
+  g.strokeStyle = "#1d2a1f"; g.lineWidth = 9; g.lineCap = "round";
+  g.beginPath(); g.moveTo(300, 0); g.quadraticCurveTo(120, 120, -60, 230); g.stroke();
+  const leaves = [[200, 60, -.6], [110, 130, .5], [40, 170, -.4], [-30, 215, .7], [160, 95, 2.4], [70, 160, 2.6]];
+  leaves.forEach(([x, y, a]) => {
+    g.save(); g.translate(x, y); g.rotate(a);
+    g.fillStyle = "#1f3524"; g.beginPath(); g.ellipse(0, 46, 22, 52, 0, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = "rgba(255,255,255,.08)"; g.lineWidth = 2; g.beginPath(); g.moveTo(0, 0); g.lineTo(0, 92); g.stroke();
+    g.restore();
+  });
+  [[130, 118], [148, 128], [124, 136], [56, 172], [74, 180], [-10, 222], [8, 228]].forEach(([x, y], i) => {
+    g.fillStyle = i % 3 === 0 ? "#8f1f19" : "#bf3326";
+    g.beginPath(); g.arc(x, y, 11, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "rgba(255,255,255,.28)"; g.beginPath(); g.arc(x - 3, y - 4, 3, 0, Math.PI * 2); g.fill();
+  });
+  g.restore();
+}
+
+function birds(t) {
+  g.strokeStyle = "rgba(30,28,40,.55)"; g.lineWidth = 2;
+  [[0, 210, 1], [1.3, 240, .8], [2.1, 190, .7]].forEach(([d, y, s]) => {
+    const x = 200 + (t - d) * 90, f = Math.sin(t * 8 + d) * 5 * s;
+    g.beginPath(); g.moveTo(x - 10 * s, y - f); g.quadraticCurveTo(x - 4 * s, y - 3, x, y); g.quadraticCurveTo(x + 4 * s, y - 3, x + 10 * s, y - f); g.stroke();
+  });
+}
+
+function sceneA(t) {
+  const k = clamp(t / 7), camX = t * 38;
+  g.save();
+  const zoom = 1 + k * .06; g.translate(W / 2, H / 2); g.scale(zoom, zoom); g.translate(-W / 2, -H / 2);
+  g.fillStyle = grad(0, H * .75, [[0, "#232845"], [.45, "#6e5a78"], [.78, "#e59a6e"], [1, "#f6c690"]]);
+  g.fillRect(-50, -50, W + 100, H + 100);
+  // sun
+  const sy = lerp(430, 300, ease(k)), sx = 520;
+  const glow = g.createRadialGradient(sx, sy, 10, sx, sy, 300);
+  glow.addColorStop(0, "rgba(255,226,180,.9)"); glow.addColorStop(.25, "rgba(255,190,140,.35)"); glow.addColorStop(1, "rgba(255,190,140,0)");
+  g.fillStyle = glow; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#f2603f"; g.beginPath(); g.arc(sx, sy, 46, 0, Math.PI * 2); g.fill();
+  // soft clouds
+  for (let i = 0; i < 4; i++) {
+    const cxl = ((i * 360 + t * 12) % (W + 400)) - 200, cyl = 120 + (i % 2) * 70;
+    g.fillStyle = "rgba(255,214,190,.16)";
+    [[0, 0, 120, 26], [70, -14, 80, 22], [-60, 6, 70, 18]].forEach(([dx, dy, rx, ry]) => { g.beginPath(); g.ellipse(cxl + dx, cyl + dy, rx, ry, 0, 0, Math.PI * 2); g.fill(); });
+  }
+  birds(t);
+  ridge(t, camX, .15, 420, 150, 260, 1.2, "#5b5470", "#e7b49a");
+  ridge(t, camX, .3, 450, 120, 200, 4.1, "#4a4a62", "#d9a790");
+  ridge(t, camX, .5, 490, 100, 170, 2.7, "#3c4a4f", "#c99c86");
+  // drifting mist band
+  for (let i = 0; i < 3; i++) {
+    const mx = ((t * 30 * (i + 1) + i * 500) % (W + 800)) - 400, my = 455 + i * 22;
+    const mg = g.createRadialGradient(mx, my, 10, mx, my, 380);
+    mg.addColorStop(0, "rgba(246,214,190,.35)"); mg.addColorStop(1, "rgba(246,214,190,0)");
+    g.fillStyle = mg; g.fillRect(0, 300, W, 300);
+  }
+  ridge(t, camX, .8, 560, 70, 220, 6.3, "#2b4232", null);
+  // shade trees and a farmhouse on the near hill
+  const hx = 820 - camX * .8;
+  [[hx - 260, 1.0], [hx - 120, .8], [hx + 190, 1.1], [hx + 380, .9], [hx - 520, .85]].forEach(([x, s]) => {
+    g.fillStyle = "#1f3326"; g.fillRect(x - 3 * s, 470 - 40 * s, 6 * s, 50 * s);
+    g.beginPath(); g.ellipse(x, 470 - 52 * s, 46 * s, 20 * s, 0, 0, Math.PI * 2); g.fill();
+    g.beginPath(); g.ellipse(x + 10 * s, 470 - 66 * s, 30 * s, 13 * s, 0, 0, Math.PI * 2); g.fill();
+  });
+  g.fillStyle = "#e9dccb"; g.fillRect(hx - 30, 474, 64, 30);
+  g.fillStyle = "#8e3b2e"; g.beginPath(); g.moveTo(hx - 40, 476); g.lineTo(hx + 2, 452); g.lineTo(hx + 44, 476); g.closePath(); g.fill();
+  g.fillStyle = "#3a2a20"; g.fillRect(hx - 4, 488, 12, 16);
+  g.fillStyle = "rgba(233,220,203,.65)"; g.fillRect(hx + 46, 494, 70, 10);   // drying patio
+  coffeeRows(t, camX);
+  branch(t, camX);
+  g.restore();
+}
+
+/* ---------- scene B: city street at blue hour ---------- */
+const VP = { x: 640, y: 392 };
+function proj(x, y, z) { // world (x lateral, y height, z depth) → screen
+  const f = 520 / z;
+  return [VP.x + x * f, VP.y - y * f, f];
+}
+const R2 = rng(42);
+const STREET = []; // building facades along both sides
+for (let i = 0; i < 26; i++) {
+  ["L", "R"].forEach((side) => {
+    STREET.push({ side, z0: 2 + i * 3.2 + R2() * .6, h: 6 + R2() * 9, w: 2.4 + R2() * .8,
+      hue: ["#2a3046", "#323850", "#2d2f40", "#3a3447"][Math.floor(R2() * 4)],
+      lit: Array.from({ length: 40 }, () => R2() < .45), lantern: R2() < .45, sign: R2() < .5, signHue: ["#e3b45a", "#d9573f", "#f1e6c8", "#7fb1a8"][Math.floor(R2() * 4)] });
+  });
+}
+function quad(a, b, c, d, fill) { g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.lineTo(...c); g.lineTo(...d); g.closePath(); g.fillStyle = fill; g.fill(); }
+
+function cafeFacade(dz, k) {
+  // the café at the end of the street, centred on the vanishing point
+  const zf = Math.max(dz, .35), [cx, cy, f] = proj(0, 1.9, zf), w = 7.6 * f, h = 7 * f;
+  const x0 = cx - w / 2, y0 = cy - h / 2;
+  g.fillStyle = "#e9e2d6"; g.fillRect(x0, y0, w, h);                       // plaster wall
+  g.fillStyle = "#1a1a1a"; g.fillRect(x0 + w * .12, y0 + h * .1, w * .76, h * .12); // sign band
+  g.save(); g.fillStyle = "#f6f1e8"; g.font = `500 ${Math.max(6, h * .055)}px Inter`; g.textAlign = "center"; g.textBaseline = "middle";
+  g.letterSpacing = `${h * .02}px`;
+  g.fillText("KUMCOFFEE", cx + h * .03, y0 + h * .16); g.restore();
+  // warm window and door
+  const wx = x0 + w * .12, wy = y0 + h * .3, ww = w * .76, wh = h * .62;
+  const win = g.createLinearGradient(0, wy, 0, wy + wh);
+  win.addColorStop(0, "#ffd9a0"); win.addColorStop(1, "#f0a960");
+  g.fillStyle = win; g.fillRect(wx, wy, ww, wh);
+  g.fillStyle = "rgba(60,40,25,.35)"; g.fillRect(wx, wy + wh * .66, ww, wh * .34);          // counter inside
+  g.fillStyle = "#2a2a2a"; g.fillRect(wx + ww * .495, wy, ww * .01, wh);                      // mullion
+  // noren curtain with the ensō
+  const nx = cx - w * .17, ny = wy, nw = w * .34, nh = wh * .42;
+  g.fillStyle = "#1f2b45";
+  for (let i = 0; i < 3; i++) g.fillRect(nx + i * nw / 3 + 1, ny, nw / 3 - 2, nh + Math.sin(k * 6 + i) * nh * .02);
+  drawEnso(cx - nh * .32, ny + nh * .2, nh * .64, "#f3efe6", "#d2513a");
+  // glow spill onto the street
+  const sp = g.createRadialGradient(cx, y0 + h, 10, cx, y0 + h, w * .9);
+  sp.addColorStop(0, "rgba(255,190,120,.35)"); sp.addColorStop(1, "rgba(255,190,120,0)");
+  g.fillStyle = sp; g.fillRect(0, 0, W, H);
+}
+
+function sceneB(t) {
+  const lt = t - 6.5, travel = lt * 6.8, k = clamp(lt / 7.5);
+  g.fillStyle = grad(0, VP.y + 40, [[0, "#0f1530"], [.65, "#2c3466"], [1, "#d07a5a"]]);
+  g.fillRect(0, 0, W, H);
+  // distant skyline
+  g.fillStyle = "#1c2140";
+  for (let i = 0; i < 40; i++) { const bw = 30 + (i * 37 % 50), bh = 40 + (i * 53 % 120), bx = i * 34 - 30; g.fillRect(bx, VP.y - bh, bw, bh + 5); }
+  // road and pavements
+  g.fillStyle = "#2b2c36"; g.fillRect(0, VP.y, W, H - VP.y);
+  quad([0, H], [W, H], [VP.x + 6, VP.y], [VP.x - 6, VP.y], "#22232c");
+  quad([0, H], [0, H * .86], [VP.x - 8, VP.y], [VP.x - 6, VP.y], "#3a3a44");
+  quad([W, H], [W, H * .86], [VP.x + 8, VP.y], [VP.x + 6, VP.y], "#3a3a44");
+  // wet-road reflection of the sky glow
+  g.fillStyle = grad(VP.y, H, [[0, "rgba(240,150,110,.35)"], [1, "rgba(240,150,110,0)"]]);
+  g.beginPath(); g.moveTo(VP.x - 8, VP.y); g.lineTo(VP.x + 8, VP.y); g.lineTo(W * .7, H); g.lineTo(W * .3, H); g.fill();
+  // lane dashes
+  for (let i = 0; i < 30; i++) {
+    const z = ((i * 2.6 - travel) % 78 + 78) % 78 + .6;
+    const [x1, y1, f1] = proj(-.12, -1.6, z), [x2, y2] = proj(.12, -1.6, z + 1);
+    if (z < 1) continue;
+    quad([x1, y1], [x1 + .24 * f1, y1], [x2, y2], [x2 - (.24 * 520 / (z + 1)), y2], "rgba(235,230,215,.75)");
+  }
+  // facades, far to near
+  const items = STREET.map((b) => ({ ...b, z: b.z0 - travel })).filter((b) => b.z > .5 && b.z < 80).sort((a, b) => b.z - a.z);
+  const endZ = 51 - travel; // the café sits at the end of the street
+  if (endZ > .35) cafeFacade(endZ, k);
+  items.forEach((b) => {
+    if (b.z > endZ - .5) return;
+    const sgn = b.side === "L" ? -1 : 1, xIn = sgn * 3.2, xOut = sgn * 9, depth = b.w;
+    const p1 = proj(xIn, -1.6, b.z), p2 = proj(xIn, b.h, b.z), p3 = proj(xIn, b.h, b.z + depth), p4 = proj(xIn, -1.6, b.z + depth);
+    const shade = clamp(1 - b.z / 70);
+    quad([p1[0], p1[1]], [p2[0], p2[1]], [p3[0], p3[1]], [p4[0], p4[1]], b.hue);
+    // windows on the street-facing wall
+    let wi = 0;
+    for (let fl = 0; fl < Math.floor(b.h / 1.6); fl++) for (let c = 0; c < 2; c++) {
+      if (!b.lit[wi++ % 40]) continue;
+      const zA = b.z + .3 + c * depth / 2, zB = zA + depth / 2 - .6, yA = .2 + fl * 1.6, yB = yA + .9;
+      const a = proj(xIn, yA, zA), bb = proj(xIn, yB, zA), cc = proj(xIn, yB, zB), d = proj(xIn, yA, zB);
+      quad([a[0], a[1]], [bb[0], bb[1]], [cc[0], cc[1]], [d[0], d[1]], `rgba(255,${200 + fl * 3},${130 + c * 30},${.55 + .4 * shade})`);
+    }
+    // vertical sign and paper lantern
+    if (b.sign) {
+      const a = proj(xIn + sgn * -.05, 4.2, b.z + .5), c = proj(xIn + sgn * -.05, 1.2, b.z + .5), f = a[2];
+      g.fillStyle = b.signHue; g.globalAlpha = .9; g.fillRect(a[0] - .22 * f, a[1], .44 * f, c[1] - a[1]); g.globalAlpha = 1;
+      g.fillStyle = "rgba(20,20,30,.55)";
+      for (let i = 0; i < 4; i++) g.fillRect(a[0] - .1 * f, a[1] + (i + .5) * (c[1] - a[1]) / 4.6, .2 * f, .12 * f);
+    }
+    if (b.lantern) {
+      const [lx, ly, f] = proj(xIn + sgn * -.5, 2.4, b.z + 1.2);
+      const lg = g.createRadialGradient(lx, ly, 1, lx, ly, f * 1.4);
+      lg.addColorStop(0, "rgba(255,120,80,.55)"); lg.addColorStop(1, "rgba(255,120,80,0)");
+      g.fillStyle = lg; g.fillRect(lx - f * 1.4, ly - f * 1.4, f * 2.8, f * 2.8);
+      g.fillStyle = "#d8452f"; g.beginPath(); g.ellipse(lx, ly, .28 * f, .4 * f, 0, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#1a1a1a"; g.fillRect(lx - .2 * f, ly - .45 * f, .4 * f, .08 * f); g.fillRect(lx - .2 * f, ly + .37 * f, .4 * f, .08 * f);
+    }
+  });
+  // street lamps
+  for (let i = 0; i < 12; i++) {
+    const z = ((i * 7 + 3 - travel) % 84 + 84) % 84 + .8; if (z > endZ - 1) continue;
+    [-1, 1].forEach((s) => {
+      const [bx, by, f] = proj(s * 2.9, -1.6, z), [tx, ty] = proj(s * 2.9, 4.5, z);
+      g.strokeStyle = "#15161d"; g.lineWidth = Math.max(1, .1 * f); g.beginPath(); g.moveTo(bx, by); g.lineTo(tx, ty); g.stroke();
+      const lg = g.createRadialGradient(tx, ty, 1, tx, ty, 1.6 * f);
+      lg.addColorStop(0, "rgba(255,230,180,.8)"); lg.addColorStop(1, "rgba(255,230,180,0)");
+      g.fillStyle = lg; g.fillRect(tx - 1.6 * f, ty - 1.6 * f, 3.2 * f, 3.2 * f);
+    });
+  }
+  // walking into the café: warm light swells
+  const enter = smooth(12.8, 14.1, t);
+  if (enter > 0) { g.fillStyle = `rgba(255,224,180,${enter})`; g.fillRect(0, 0, W, H); }
+}
+
+/* ---------- scene C: cappuccino and tulip latte art ---------- */
+function wood() {
+  g.fillStyle = "#6b4528"; g.fillRect(0, 0, W, H);
+  const R = rng(9);
+  for (let i = 0; i < 90; i++) {
+    const y = R() * H, a = .04 + R() * .08;
+    g.strokeStyle = R() < .5 ? `rgba(30,15,5,${a})` : `rgba(255,220,180,${a * .6})`;
+    g.lineWidth = 1 + R() * 3; g.beginPath(); g.moveTo(0, y);
+    for (let x = 0; x <= W; x += 80) g.lineTo(x, y + Math.sin(x / 200 + i) * 6);
+    g.stroke();
+  }
+}
+function crescent(cx, cy, w, h, grow, color) {
+  // one push of the tulip: a crescent whose wings curve upward, growing from the pour point
+  if (grow <= 0) return;
+  const k = ease(clamp(grow));
+  g.save(); g.translate(cx, cy); g.scale(k, k);
+  g.beginPath();
+  g.moveTo(-w / 2, -h * .55);
+  g.bezierCurveTo(-w * .52, h * .55, w * .52, h * .55, w / 2, -h * .55);           // outer (bottom) edge
+  g.bezierCurveTo(w * .36, h * .02, -w * .36, h * .02, -w / 2, -h * .55);         // inner (top) edge
+  g.fillStyle = color; g.fill();
+  g.restore();
+}
+function sceneC(t) {
+  const lt = t - 14, cx = 640, cy = 372;
+  const zoom = 1 + clamp(lt / 6) * .08;
+  g.save(); g.translate(cx, cy); g.scale(zoom, zoom); g.translate(-cx, -cy);
+  wood();
+  // soft café bokeh
+  const R = rng(3);
+  for (let i = 0; i < 14; i++) { const bx = R() * W, by = R() * H, br = 30 + R() * 60; const bg = g.createRadialGradient(bx, by, 1, bx, by, br); bg.addColorStop(0, "rgba(255,210,150,.12)"); bg.addColorStop(1, "rgba(255,210,150,0)"); g.fillStyle = bg; g.fillRect(bx - br, by - br, br * 2, br * 2); }
+  // saucer, cup, spoon
+  g.fillStyle = "rgba(0,0,0,.35)"; g.beginPath(); g.ellipse(cx + 18, cy + 22, 258, 258, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#efebe4"; g.beginPath(); g.arc(cx, cy, 250, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = "rgba(0,0,0,.06)"; g.lineWidth = 3; g.beginPath(); g.arc(cx, cy, 205, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "#c9c4bb"; g.save(); g.translate(cx + 120, cy + 175); g.rotate(-.55);
+  g.beginPath(); g.ellipse(0, 0, 18, 26, 0, 0, Math.PI * 2); g.fill(); g.fillRect(-4, 20, 8, 120); g.restore();
+  g.fillStyle = "#f7f5f1"; g.beginPath(); g.roundRect(cx + 150, cy - 26, 120, 52, 26); g.fill(); // handle
+  g.fillStyle = "rgba(0,0,0,.25)"; g.beginPath(); g.arc(cx + 8, cy + 10, 182, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#fbfaf7"; g.beginPath(); g.arc(cx, cy, 178, 0, Math.PI * 2); g.fill();
+  drawEnso(cx - 150, cy + 112, 36, "#1a1a1a", "#c8402c"); // small mark on the cup rim
+  // crema
+  const crema = g.createRadialGradient(cx - 30, cy - 30, 10, cx, cy, 150);
+  crema.addColorStop(0, "#b77a45"); crema.addColorStop(.7, "#93582d"); crema.addColorStop(1, "#5e3417");
+  g.fillStyle = crema; g.beginPath(); g.arc(cx, cy, 152, 0, Math.PI * 2); g.fill();
+  g.save(); g.beginPath(); g.arc(cx, cy, 150, 0, Math.PI * 2); g.clip();
+  // tulip: four nested crescents pushed from the bottom, a heart on top, then the pull-through
+  const milk = "#f6efe3", line = "#d9b48c";
+  const p = (a) => smooth(a, a + .8, lt);
+  [[cy + 96, 236, 92, .6], [cy + 52, 200, 80, 1.4], [cy + 12, 164, 68, 2.1], [cy - 24, 128, 56, 2.8]].forEach(([y, w, h, at]) => {
+    crescent(cx, y, w, h, p(at), milk);
+    crescent(cx, y - h * .1, w * .72, h * .5, p(at + .15), line);   // thin crema line inside each push
+    crescent(cx, y - h * .14, w * .64, h * .4, p(at + .2), milk);
+  });
+  const hk = p(3.5);
+  if (hk > 0) {
+    g.save(); g.translate(cx, cy - 66); g.scale(hk, hk);
+    g.beginPath(); g.moveTo(0, 30);
+    g.bezierCurveTo(-58, -2, -44, -50, 0, -26); g.bezierCurveTo(44, -50, 58, -2, 0, 30);
+    g.fillStyle = milk; g.fill(); g.restore();
+  }
+  const pull = smooth(4.4, 5.0, lt);
+  if (pull > 0) {
+    g.strokeStyle = "#c79466"; g.lineWidth = 3; g.lineCap = "round";
+    g.beginPath(); g.moveTo(cx, cy - 92); g.lineTo(cx, cy - 92 + pull * 236); g.stroke();
+  }
+  g.restore();
+  // milk stream while pouring
+  const pouring = lt > .3 && lt < 5.0;
+  if (pouring) {
+    const top = smooth(.3, .6, lt), sx = cx + Math.sin(lt * 9) * 3, sy = lt < 3.5 ? cy + 96 - Math.min(3, Math.floor((lt - .6) / .75)) * 40 : cy - 66;
+    g.strokeStyle = "rgba(248,244,236,.95)"; g.lineWidth = 7; g.lineCap = "round";
+    g.beginPath(); g.moveTo(sx, -20); g.quadraticCurveTo(sx + 6, sy * .5, sx, Math.min(sy, lerp(-20, sy, top))); g.stroke();
+    // pitcher spout
+    g.fillStyle = "#cfd3d6"; g.beginPath(); g.moveTo(sx - 70, -40); g.lineTo(sx + 50, -40); g.lineTo(sx + 8, 12); g.lineTo(sx - 12, 12); g.closePath(); g.fill();
+  }
+  // steam
+  if (lt > 4.6) {
+    const a = smooth(4.6, 5.4, lt) * .25;
+    for (let i = 0; i < 3; i++) {
+      g.strokeStyle = `rgba(255,255,255,${a})`; g.lineWidth = 10; g.lineCap = "round"; g.beginPath();
+      for (let y = 0; y < 200; y += 10) { const x = cx - 60 + i * 60 + Math.sin(y / 30 + lt * 2 + i) * 14; y ? g.lineTo(x, cy - 160 - y) : g.moveTo(x, cy - 160); }
+      g.stroke();
+    }
+  }
+  g.restore();
+  // fade in from the café door light
+  const from = 1 - smooth(14, 14.7, t);
+  if (from > 0) { g.fillStyle = `rgba(255,224,180,${from})`; g.fillRect(0, 0, W, H); }
+}
+
+/* ---------- compositing ---------- */
+const MIST = "#cfc6c0";
+function mistOverlay(a) { if (a > 0) { g.fillStyle = rgba(MIST, a); g.fillRect(0, 0, W, H); } }
+
+window.render = function (t) {
+  g.save();
+  if (t < 7.2) sceneA(t);
+  if (t >= 6.6 && t < 14.2) { g.globalAlpha = t < 7.2 ? smooth(6.6, 7.2, t) : 1; sceneB(t); g.globalAlpha = 1; }
+  if (t >= 14) sceneC(t);
+  g.restore();
+  // mist: opens the loop, carries the country→city cut, closes the loop
+  mistOverlay(1 - smooth(0, 1.1, t));
+  mistOverlay(Math.sin(clamp((t - 6) / 1.8) * Math.PI) * .9);
+  mistOverlay(smooth(19, 20, t));
+  // grade for text on top: dim, gentle vignette
+  g.fillStyle = "rgba(8,8,10,.22)"; g.fillRect(0, 0, W, H);
+  const v = g.createRadialGradient(W / 2, H / 2, H * .35, W / 2, H / 2, H * .95);
+  v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.35)");
+  g.fillStyle = v; g.fillRect(0, 0, W, H);
+};
+window.DUR = DUR;
+render(0);
+</script>
+</body></html>

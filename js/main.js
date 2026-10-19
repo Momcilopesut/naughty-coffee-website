@@ -9,6 +9,7 @@
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   document.documentElement.classList.remove("no-js");
+  if (document.querySelector(".hero--film")) document.body.classList.add("has-film");
 
   /* ---------------- Header & mobile nav ---------------- */
 

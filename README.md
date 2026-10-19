@@ -35,3 +35,20 @@ Placeholder details to replace before launch: the address (`12 Harbour Lane`), e
 
 The cart works (stored in the browser), but checkout is a placeholder. To take real payments,
 connect a provider such as Shopify Buy Button, Stripe Payment Links or Snipcart.
+
+## Logo
+
+The mark is a brush ensō (open zen circle) with a vermilion coffee-cherry dot.
+`tools/logo.py` generates it; `python3 tools/logo.py mark.svg` writes a standalone SVG.
+
+## Header film
+
+`video/hero-film.webm` / `.mp4` is a 20-second loop drawn in code: farms at dawn → city street → café →
+cappuccino with tulip latte art. To change it, edit `tools/hero-film/film.html` (open it in a browser and call
+`render(t)` to preview any second), then render and encode:
+
+```sh
+node tools/hero-film/render.js        # writes 480 PNG frames to tools/hero-film/frames/ (needs Playwright)
+ffmpeg -framerate 24 -i tools/hero-film/frames/f%04d.png -c:v libx264 -crf 24 -pix_fmt yuv420p -movflags +faststart video/hero-film.mp4
+ffmpeg -i video/hero-film.mp4 -c:v libvpx-vp9 -b:v 0 -crf 38 -an video/hero-film.webm
+```

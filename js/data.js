@@ -218,6 +218,7 @@ SHOP.sales = {
   years: 3,
   opens: 7,    // opening hours (24h clock) — live sales only tick while open
   closes: 19,
+  pace: 30,    // live-sale speed: 1 = real time (a cup every ~86 s), 30 = about one every 3 s
   mix: [
     { name: "Flat White",     share: 0.24, change: 6.8 },
     { name: "Cappuccino",     share: 0.19, change: 2.1 },

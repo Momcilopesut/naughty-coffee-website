@@ -336,7 +336,7 @@
   }
 
   $$("[data-ticker]").forEach((el) => {
-    const { cupsPerDay, years, mix, opens = 7, closes = 19 } = SHOP.sales;
+    const { cupsPerDay, years, mix, opens = 7, closes = 19, pace = 1 } = SHOP.sales;
     const total = cupsPerDay * 365 * years;
     // largest-remainder rounding so the drinks add up exactly to the total
     const raw = mix.map((m) => m.share * total);
@@ -397,11 +397,11 @@
       io.observe(el);
     } else rollIn();
 
-    // live sales: one cup every ~86 s on average (500 cups over a 12-hour day), drink picked by sales mix
-    const meanGap = openMinutes * 60000 / cupsPerDay;
+    // live sales: real pace is one cup every ~86 s (500 over a 12-hour day); `pace` speeds that up
+    const meanGap = openMinutes * 60000 / cupsPerDay / pace;
     const pick = () => { let r = Math.random(), i = 0; while (i < mix.length - 1 && (r -= mix[i].share) > 0) i++; return i; };
     const sell = () => {
-      if (isOpen() && values.today < cupsPerDay) {
+      if (isOpen()) {
         const i = pick();
         values["d" + i]++; values.total++; values.today++;
         ["d" + i, "total", "today"].forEach(show);
@@ -410,9 +410,9 @@
         });
       }
       setLive();
-      setTimeout(sell, Math.min(Math.max(-Math.log(1 - Math.random()) * meanGap, 8000), 240000));
+      setTimeout(sell, Math.min(Math.max(-Math.log(1 - Math.random()) * meanGap, 1200), meanGap * 2));
     };
-    setTimeout(sell, 6000 + Math.random() * 10000);
+    setTimeout(sell, 2200 + Math.random() * 1500);  // first sale right after the roll-in
   });
 
   /* ---------------- Hero bags ---------------- */

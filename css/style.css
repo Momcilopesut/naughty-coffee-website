@@ -562,3 +562,19 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
   .section-head .link { font-size: 14px; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ---------- Opening animation (js/intro.js) ---------- */
+.intro {
+  position: fixed; inset: 0; z-index: 200; background: #fff; color: #111;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px;
+  transition: opacity .4s ease, transform .4s ease; cursor: pointer;
+}
+.intro.is-out { opacity: 0; transform: translateY(-14px); pointer-events: none; }
+html.intro-on { overflow: hidden; }
+html.intro-skip #intro { display: none; }
+.intro-art { width: min(84vw, 560px); height: auto; overflow: visible; }
+.intro-art path { fill: none; stroke: #111; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.intro-meter { width: min(64vw, 340px); display: flex; align-items: center; gap: 16px; }
+.intro-bar { position: relative; flex: 1; height: 1px; background: #e2e2df; overflow: hidden; }
+.intro-bar i { position: absolute; inset: 0; background: #111; transform: scaleX(0); transform-origin: left; }
+.intro-pct { min-width: 4ch; text-align: right; font: 500 12px/1 var(--sans); letter-spacing: .04em; font-variant-numeric: tabular-nums; }

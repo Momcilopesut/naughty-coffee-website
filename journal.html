@@ -10,9 +10,18 @@
 <link rel="preload" as="font" type="font/woff2" href="fonts/inter-tight-latin.woff2" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&text=%E3%82%AF%E3%83%A0%E7%8F%88%E7%90%B2&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&text=%E3%82%AF%E3%83%A0%E7%8F%88%E7%90%B2&display=swap"></noscript>
+<script>/* skip the opening animation for return visits and reduced motion, before first paint */
+try { if (sessionStorage.getItem("kum-intro") === "1" || matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("intro-skip"); } catch (e) {}
+</script>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<div id="intro" class="intro" aria-hidden="true">
+  <svg class="intro-art" viewBox="0 0 400 260"></svg>
+  <div class="intro-meter"><span class="intro-bar"><i></i></span><span class="intro-pct">0%</span></div>
+</div>
+<noscript><style>#intro { display: none; }</style></noscript>
+<script src="js/intro.js" defer></script>
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="ticker ticker--bar" data-ticker role="region"></div>

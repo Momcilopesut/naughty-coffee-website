@@ -107,5 +107,8 @@ def render(W, H, tag, tmp):
 
 
 with tempfile.TemporaryDirectory() as tmp:
-    render(1920, 1080, "", tmp)
-    render(1080, 1620, "-portrait", tmp)
+    only = os.environ.get("ONLY")  # "wide" or "portrait" to re-render one cut
+    if only != "portrait":
+        render(1920, 1080, "", tmp)
+    if only != "wide":
+        render(1080, 1920, "-portrait", tmp)

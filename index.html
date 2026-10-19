@@ -3,97 +3,119 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kumcoffee — Roastery & Kitchen</title>
-<meta name="description" content="Kumcoffee is a specialty coffee shop, roastery and kitchen. Fresh-roasted beans, all-day breakfast, and origin stories from the farms we buy from.">
-<meta name="theme-color" content="#ffffff">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231f2b22'/%3E%3Cpath d='M11.5 23 C14 15.5 18 17 20.5 9' stroke='%23f3efe6' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>Kumcoffee — Coffee Bar, Roastery & Kitchen</title>
+<meta name="description" content="Kumcoffee is a specialty coffee bar, roastery and kitchen. Fresh-roasted beans, all-day breakfast, and stories from the farms we buy from.">
+<meta name="theme-color" content="#f6f6f5">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23111'/%3E%3Cpath d='M15.5 27 C19 21 21 19 24.5 13' stroke='%23f6f6f5' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<div class="announce">Roasted Mondays, shipped Tuesdays · Free shipping over €45 · <a href="shop.html#coffee">Shop coffee</a></div>
 <header class="site-header">
   <div class="wrap">
-    <nav class="nav" id="site-nav" aria-label="Main">
-      <a href="index.html" class="nav-home" aria-current="page">Home</a>
-      <a href="shop.html">Shop</a>
-      <a href="menu.html">Menu</a>
-      <a href="origins.html">Origins</a>
-      <a href="about.html">Roastery</a>
-    </nav>
     <a class="brand" href="index.html" aria-label="Kumcoffee home">
-      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#1f2b22"/><path d="M11.5 23 C14 15.5 18 17 20.5 9" stroke="#f3efe6" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5" fill="none" stroke="#111" stroke-width="1.5"/><ellipse cx="20" cy="20" rx="8.5" ry="12" fill="#111" transform="rotate(30 20 20)"/><path d="M15.5 27 C19 21 21 19 24.5 13" stroke="#f6f6f5" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
       <span class="brand-name">Kumcoffee</span>
     </a>
     <div class="header-actions">
-      <a class="text-link" href="about.html#visit">Visit us</a>
-      <button class="cart-btn" data-cart-open aria-label="Open bag">Bag <span class="cart-count">0</span></button>
-      <button class="menu-toggle" aria-controls="site-nav" aria-expanded="false" aria-label="Menu"><span></span><span></span></button>
+      <button class="cart-btn" data-cart-open aria-label="Open cart">Cart <span class="cart-count">0</span></button>
+      <button class="menu-toggle" aria-controls="site-nav" aria-expanded="false" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </div>
+  <nav class="nav" id="site-nav" aria-label="Main">
+    <div class="nav-links">
+        <a href="index.html" aria-current="page"><small>(01)</small>Home</a>
+        <a href="shop.html"><small>(02)</small>Shop</a>
+        <a href="menu.html"><small>(03)</small>Menu</a>
+        <a href="origins.html"><small>(04)</small>Origins</a>
+        <a href="about.html"><small>(05)</small>Roastery</a>
+    </div>
+    <div class="nav-info">
+      <div><span class="label">Visit</span>12 Harbour Lane<br>Your City 10001</div>
+      <div><span class="label">Hours</span>Mon – Fri 7:00 – 16:00<br>Sat – Sun 8:00 – 16:00</div>
+      <div><span class="label">Contact</span>hello@kumcoffee.example<br>Instagram</div>
+    </div>
+  </nav>
 </header>
 <main id="main">
 <section class="hero">
-  <div class="hero-panel">
-    <div class="hero-copy">
-      <span class="eyebrow">Roasted in-house, every week</span>
-      <h1 class="display">Slow coffee, small batches, big breakfasts.</h1>
-      <p class="lede">We buy green coffee from farms we know, roast it a few metres from the counter, and cook breakfast worth getting up for.</p>
-      <div class="hero-ctas">
-        <a class="btn" href="shop.html#coffee">Shop coffee</a>
-        <a class="btn btn--ghost" href="menu.html">See the menu</a>
-      </div>
-    </div>
-    <div class="hero-media" data-hero-bags="guji-hambela house-espresso huila-pink-bourbon" aria-hidden="true"></div>
-  </div>
-</section>
-
-<section class="section--tight" style="border-bottom:1px solid var(--line)">
-  <div class="wrap pillars">
-    <div class="pillar reveal"><span class="num">01</span><h3>Coffee bar</h3><p>Espresso, filter and pour over from a rotating shelf of single origins.</p></div>
-    <div class="pillar reveal"><span class="num">02</span><h3>Roastery</h3><p>Small-batch roasted in-house every week, shipped within days of roasting.</p></div>
-    <div class="pillar reveal"><span class="num">03</span><h3>Kitchen</h3><p>All-day breakfast with a Japanese accent, made from scratch each morning.</p></div>
-  </div>
-</section>
-
-<section class="section">
   <div class="wrap">
-    <div class="section-head">
-      <div>
-        <span class="eyebrow">Fresh off the roaster</span>
-        <h2 class="h2">Shop coffee</h2>
+    <div class="figure"><div class="hero-media" data-hero-bags="guji-hambela house-espresso huila-pink-bourbon" aria-hidden="true"></div></div>
+    <div class="hero-intro">
+      <div class="reveal">
+        <span class="label">Coffee bar</span>
+        <span class="label">Roastery</span>
+        <span class="label">Kitchen</span>
       </div>
-      <a class="link" href="shop.html#coffee">Shop all coffee</a>
+      <div class="reveal">
+        <h1 class="statement">Coffee is the first decision of the day. We think it should be a good one.</h1>
+        <div class="hero-ctas">
+          <a class="btn" href="shop.html#coffee">Shop coffee</a>
+          <a class="btn btn--ghost" href="menu.html">See the menu</a>
+        </div>
+      </div>
     </div>
-    <div class="product-grid" data-products="coffee" data-limit="4"></div>
   </div>
 </section>
 
-<section class="section" style="padding-top:0">
-  <div class="wrap tiles">
-    <a class="tile reveal" href="about.html">
-      <div class="art-panel"><svg class="drum" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of coffee beans turning in a roasting drum, from green to dark brown">
-      <rect width="500" height="500" fill="#ece5d8"/>
-      <circle cx="250" cy="250" r="215" fill="none" stroke="#1a1a1a" stroke-opacity=".12"/>
-      <circle cx="250" cy="250" r="140" fill="none" stroke="#1a1a1a" stroke-opacity=".1" stroke-dasharray="2 6"/>
-      <g class="spin"><g transform="translate(420.0 250.0) rotate(90)"><ellipse rx="15" ry="21" fill="#9bb07a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(403.2 323.8) rotate(116)"><ellipse rx="15" ry="21" fill="#b8b06a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(356.0 382.9) rotate(141)"><ellipse rx="15" ry="21" fill="#c9a15a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(287.8 415.7) rotate(167)"><ellipse rx="15" ry="21" fill="#b97a45"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(212.2 415.7) rotate(193)"><ellipse rx="15" ry="21" fill="#8a5432"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(144.0 382.9) rotate(219)"><ellipse rx="15" ry="21" fill="#5e3a24"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(96.8 323.8) rotate(244)"><ellipse rx="15" ry="21" fill="#3b2618"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(80.0 250.0) rotate(270)"><ellipse rx="15" ry="21" fill="#9bb07a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(96.8 176.2) rotate(296)"><ellipse rx="15" ry="21" fill="#b8b06a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(144.0 117.1) rotate(321)"><ellipse rx="15" ry="21" fill="#c9a15a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(212.2 84.3) rotate(347)"><ellipse rx="15" ry="21" fill="#b97a45"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(287.8 84.3) rotate(373)"><ellipse rx="15" ry="21" fill="#8a5432"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(356.0 117.1) rotate(399)"><ellipse rx="15" ry="21" fill="#5e3a24"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(403.2 176.2) rotate(424)"><ellipse rx="15" ry="21" fill="#3b2618"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g></g><g class="spin-rev"><g transform="translate(360.0 250.0) rotate(90)"><ellipse rx="15" ry="21" fill="#b97a45"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(334.3 320.7) rotate(130)"><ellipse rx="15" ry="21" fill="#8a5432"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(269.1 358.3) rotate(170)"><ellipse rx="15" ry="21" fill="#5e3a24"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(195.0 345.3) rotate(210)"><ellipse rx="15" ry="21" fill="#3b2618"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(146.6 287.6) rotate(250)"><ellipse rx="15" ry="21" fill="#9bb07a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(146.6 212.4) rotate(290)"><ellipse rx="15" ry="21" fill="#b8b06a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(195.0 154.7) rotate(330)"><ellipse rx="15" ry="21" fill="#c9a15a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(269.1 141.7) rotate(370)"><ellipse rx="15" ry="21" fill="#b97a45"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g><g transform="translate(334.3 179.3) rotate(410)"><ellipse rx="15" ry="21" fill="#8a5432"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#1f2b22" stroke-width="2" fill="none"/></g></g>
-      <circle cx="250" cy="250" r="52" fill="#1a1a1a"/>
-      <text x="250" y="246" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" letter-spacing="2" fill="#f3efe6">FIRST</text>
-      <text x="250" y="262" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" letter-spacing="2" fill="#f3efe6">CRACK</text>
+<section>
+  <div class="wrap">
+    <div class="concept">
+      <div class="concept-labels reveal">
+        <span class="label">Concept</span>
+        <span class="label">(001)</span>
+      </div>
+      <div class="concept-body reveal">
+        <h3 class="h3">The coffee bar</h3>
+        <p class="text">Espresso, filter and pour over from a rotating shelf of single origins. Every recipe is tasted and dialled in each morning, so the cup you get at four is as good as the one at eight.</p>
+        
+        <div class="figure figure--wide"><svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a flat white seen from above">
+  <rect width="500" height="500" fill="#dcdbd6"/>
+  <circle cx="250" cy="250" r="175" fill="#f6f6f5"/>
+  <circle cx="250" cy="250" r="160" fill="none" stroke="#111" stroke-opacity=".06"/>
+  <rect x="345" y="232" width="90" height="36" rx="18" fill="#fff" stroke="#111" stroke-opacity=".08"/>
+  <circle cx="250" cy="250" r="118" fill="#fff" stroke="#111" stroke-opacity=".08"/>
+  <circle cx="250" cy="250" r="100" fill="#8a5432"/>
+  <circle cx="250" cy="250" r="100" fill="none" stroke="#b97a45" stroke-width="10" stroke-opacity=".6"/>
+  <path d="M250 300 C 205 270 200 225 228 214 C 240 210 248 218 250 228 C 252 218 260 210 272 214 C 300 225 295 270 250 300 Z" fill="#f2e6d3"/>
+  <path d="M250 300 L250 330" stroke="#f2e6d3" stroke-width="6" stroke-linecap="round"/>
+</svg></div>
+      </div>
+    </div>
+    <div class="concept">
+      <div class="concept-labels reveal">
+        <span class="label">Concept</span>
+        <span class="label">(002)</span>
+      </div>
+      <div class="concept-body reveal">
+        <h3 class="h3">The roastery</h3>
+        <p class="text">Twelve kilos at a time, a few metres from the counter. Each coffee gets its own roast profile, built over weeks of test batches and blind cupping, and rested before it reaches your cup.</p>
+        <p><a class="link" href="about.html">How we roast →</a></p>
+        <div class="figure figure--wide"><svg class="drum" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of coffee beans turning in a roasting drum, from green to dark brown">
+      <rect width="500" height="500" fill="#e3e2de"/>
+      <circle cx="250" cy="250" r="215" fill="none" stroke="#111" stroke-opacity=".12"/>
+      <circle cx="250" cy="250" r="140" fill="none" stroke="#111" stroke-opacity=".1" stroke-dasharray="2 6"/>
+      <g class="spin"><g transform="translate(420.0 250.0) rotate(90)"><ellipse rx="15" ry="21" fill="#9bb07a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(403.2 323.8) rotate(116)"><ellipse rx="15" ry="21" fill="#b8b06a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(356.0 382.9) rotate(141)"><ellipse rx="15" ry="21" fill="#c9a15a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(287.8 415.7) rotate(167)"><ellipse rx="15" ry="21" fill="#b97a45"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(212.2 415.7) rotate(193)"><ellipse rx="15" ry="21" fill="#8a5432"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(144.0 382.9) rotate(219)"><ellipse rx="15" ry="21" fill="#5e3a24"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(96.8 323.8) rotate(244)"><ellipse rx="15" ry="21" fill="#3b2618"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(80.0 250.0) rotate(270)"><ellipse rx="15" ry="21" fill="#9bb07a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(96.8 176.2) rotate(296)"><ellipse rx="15" ry="21" fill="#b8b06a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(144.0 117.1) rotate(321)"><ellipse rx="15" ry="21" fill="#c9a15a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(212.2 84.3) rotate(347)"><ellipse rx="15" ry="21" fill="#b97a45"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(287.8 84.3) rotate(373)"><ellipse rx="15" ry="21" fill="#8a5432"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(356.0 117.1) rotate(399)"><ellipse rx="15" ry="21" fill="#5e3a24"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(403.2 176.2) rotate(424)"><ellipse rx="15" ry="21" fill="#3b2618"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g></g><g class="spin-rev"><g transform="translate(360.0 250.0) rotate(90)"><ellipse rx="15" ry="21" fill="#b97a45"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(334.3 320.7) rotate(130)"><ellipse rx="15" ry="21" fill="#8a5432"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(269.1 358.3) rotate(170)"><ellipse rx="15" ry="21" fill="#5e3a24"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(195.0 345.3) rotate(210)"><ellipse rx="15" ry="21" fill="#3b2618"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(146.6 287.6) rotate(250)"><ellipse rx="15" ry="21" fill="#9bb07a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(146.6 212.4) rotate(290)"><ellipse rx="15" ry="21" fill="#b8b06a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(195.0 154.7) rotate(330)"><ellipse rx="15" ry="21" fill="#c9a15a"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(269.1 141.7) rotate(370)"><ellipse rx="15" ry="21" fill="#b97a45"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g><g transform="translate(334.3 179.3) rotate(410)"><ellipse rx="15" ry="21" fill="#8a5432"/><path d="M0 -17 C -6 -6 6 6 0 17" stroke="#111" stroke-width="2" fill="none"/></g></g>
+      <circle cx="250" cy="250" r="34" fill="#111"/>
     </svg></div>
-      <span class="eyebrow">The roastery</span>
-      <h3>Twelve kilos at a time. Never more.</h3>
-      <p>Every coffee gets its own roast profile, developed over weeks of test batches and blind cupping.</p>
-      <span class="link">How we roast</span>
-    </a>
-    <a class="tile reveal" href="menu.html">
-      <div class="art-panel"><svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a breakfast plate with eggs, sourdough and greens">
-  <rect width="500" height="500" fill="#f4f3ef"/>
-  <circle cx="250" cy="250" r="190" fill="#f8f5ee" stroke="#161613" stroke-opacity=".08"/>
-  <circle cx="250" cy="250" r="150" fill="none" stroke="#161613" stroke-opacity=".06"/>
+      </div>
+    </div>
+    <div class="concept">
+      <div class="concept-labels reveal">
+        <span class="label">Concept</span>
+        <span class="label">(003)</span>
+      </div>
+      <div class="concept-body reveal">
+        <h3 class="h3">The kitchen / breakfast, properly</h3>
+        <p class="text">A short menu cooked from scratch every morning: soft eggs, house sourdough, miso butter, crispy rice. Simple food, made carefully, served until mid-afternoon.</p>
+        <p><a class="link" href="menu.html">See the menu →</a></p>
+        <div class="figure figure--offset"><svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a breakfast plate with eggs, sourdough and greens">
+  <rect width="500" height="500" fill="#e3e2de"/>
+  <circle cx="250" cy="250" r="190" fill="#f6f6f5" stroke="#111" stroke-opacity=".08"/>
+  <circle cx="250" cy="250" r="150" fill="none" stroke="#111" stroke-opacity=".06"/>
   <path d="M150 300 q-20 -60 30 -90 q60 -30 90 20 q30 60 -20 90 q-60 30 -100 -20z" fill="#fff"/>
   <circle cx="205" cy="268" r="30" fill="#e7a43a"/>
   <circle cx="196" cy="258" r="8" fill="#f3c46a"/>
@@ -102,26 +124,9 @@
   <g fill="#4d6b45"><circle cx="330" cy="300" r="22"/><circle cx="355" cy="330" r="18"/><circle cx="310" cy="335" r="16"/></g>
   <g fill="#7c9a6b"><circle cx="340" cy="318" r="9"/><circle cx="322" cy="322" r="6"/></g>
   <g fill="#c4542a"><circle cx="250" cy="360" r="5"/><circle cx="266" cy="368" r="4"/><circle cx="238" cy="372" r="3.5"/></g>
-  <rect x="112" y="118" width="40" height="40" rx="3" fill="#1f2b22" transform="rotate(-18 132 138)"/>
 </svg></div>
-      <span class="eyebrow">The kitchen</span>
-      <h3>Breakfast, properly.</h3>
-      <p>Soft eggs, house sourdough, miso butter, crispy rice. A short menu, cooked to order until mid-afternoon.</p>
-      <span class="link">See the menu</span>
-    </a>
-  </div>
-</section>
-
-<section class="section section--alt">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <span class="eyebrow">Origin stories</span>
-        <h2 class="h2">Every bag has a place.</h2>
       </div>
-      <a class="link" href="origins.html">Read the stories</a>
     </div>
-    <ul class="origin-list" data-origin-list></ul>
   </div>
 </section>
 
@@ -129,77 +134,100 @@
   <div class="wrap">
     <div class="section-head">
       <div>
-        <span class="eyebrow">Off the retail shelf</span>
-        <h2 class="h2">Tees &amp; hats</h2>
+        <span class="label">Shop (004)</span>
+        <h2 class="h2" style="margin-top:12px">Freshly roasted</h2>
       </div>
-      <a class="link" href="shop.html#apparel">Shop apparel</a>
+      <a class="link" href="shop.html#coffee">Shop all coffee →</a>
+    </div>
+    <div class="product-grid" data-products="coffee" data-limit="4"></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="label">Origins (005)</span>
+        <h2 class="h2" style="margin-top:12px">Where it grows</h2>
+      </div>
+      <a class="link" href="origins.html">Read the stories →</a>
+    </div>
+    <ul class="origin-list" data-origin-list></ul>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="label">Merch (006)</span>
+        <h2 class="h2" style="margin-top:12px">Off the shelf</h2>
+      </div>
+      <a class="link" href="shop.html#apparel">Shop merch →</a>
     </div>
     <div class="product-grid" data-products="apparel"></div>
   </div>
 </section>
 
-<section class="section section--alt">
-  <div class="wrap"><div class="split split--top">
-      <div class="reveal">
-        <span class="eyebrow">Visit</span>
-        <h2 class="h2" style="margin:8px 0 16px">Come for coffee. <span class="italic">Stay for eggs.</span></h2>
-        <p class="lede">Walk-ins only, all day. The roaster runs Monday and Thursday mornings — grab a stool by the window and watch a batch drop.</p>
-        <p style="margin-top:28px"><a class="btn btn--ghost" href="https://maps.google.com" rel="noopener">Get directions <span class="arrow">→</span></a></p>
+<section class="section" style="padding-top:0">
+  <div class="wrap"><div class="concept" style="padding:0">
+      <div class="concept-labels reveal">
+        <span class="label">Visit</span>
+        <span class="label">(Kumcoffee)</span>
       </div>
-      <div class="visit-card reveal">
-        <span class="eyebrow eyebrow--plain">Kumcoffee · Roastery &amp; Kitchen</span>
-        <address>12 Harbour Lane<br>Your City 10001</address>
-        <div class="hours">
-          <div><span>Mon – Fri</span><span>7:00 – 16:00</span></div>
-          <div><span>Saturday</span><span>8:00 – 17:00</span></div>
-          <div><span>Sunday</span><span>8:30 – 15:00</span></div>
-          <div><span>Kitchen</span><span>Until 30 min before close</span></div>
+      <div class="concept-body reveal">
+        <div class="visit-card">
+          <span class="label">Coffee bar · Roastery · Kitchen</span>
+          <address>12 Harbour Lane<br>Your City 10001</address>
+          <div class="hours">
+            <div><span>Mon – Fri</span><span>7:00 – 16:00</span></div>
+            <div><span>Sat – Sun</span><span>8:00 – 16:00</span></div>
+            <div><span>Kitchen</span><span>Until 30 min before close</span></div>
+          </div>
         </div>
+        <p><a class="btn" href="https://maps.google.com" rel="noopener">Get directions</a></p>
       </div>
     </div></div>
 </section>
 </main>
 <footer class="site-footer">
   <div class="wrap">
+    <p class="footer-statement">Coffee bar. Roastery. Kitchen. One room.</p>
     <div class="footer-grid">
       <div>
-        <h4>Stay in the loop</h4>
-        <p>New roasts, harvest stories and the odd pancake recipe. No spam.</p>
+        <h4>(Newsletter)</h4>
+        <p>New roasts, harvest stories and the odd recipe.</p>
         <form class="signup" data-signup novalidate>
           <label for="footer-email" style="position:absolute;left:-9999px">Email</label>
           <input id="footer-email" type="email" placeholder="Email address" autocomplete="email">
-          <button class="btn" type="submit">Sign up</button>
+          <button class="btn" type="submit">Subscribe →</button>
         </form>
         <div class="form-note" aria-live="polite"></div>
       </div>
       <div>
-        <h4>Shop</h4>
+        <h4>(Visit)</h4>
+        <p>12 Harbour Lane<br>Your City 10001</p>
+      </div>
+      <div>
+        <h4>(Shop)</h4>
         <ul>
           <li><a href="shop.html#coffee">Coffee</a></li>
-          <li><a href="shop.html#apparel">Tees &amp; hats</a></li>
-          <li><a href="shop.html">Shop all</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Visit</h4>
-        <ul>
+          <li><a href="shop.html#apparel">Merch</a></li>
           <li><a href="menu.html">Menu</a></li>
-          <li><a href="about.html#visit">Hours &amp; location</a></li>
-          <li><a href="about.html">The roastery</a></li>
         </ul>
       </div>
       <div>
-        <h4>About</h4>
+        <h4>(Contact)</h4>
         <ul>
-          <li><a href="origins.html">Origin stories</a></li>
+          <li><a href="mailto:hello@kumcoffee.example">Email</a></li>
           <li><a href="https://instagram.com" rel="noopener">Instagram</a></li>
-          <li><a href="mailto:hello@kumcoffee.example">Contact</a></li>
+          <li><a href="origins.html">Origins</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-base">
       <span>© <span data-year>2026</span> Kumcoffee</span>
-      <span>Roasted in small batches, every week.</span>
+      <span>Roasted in-house, every week</span>
     </div>
   </div>
 </footer>

@@ -63,8 +63,8 @@
     <div class="scrim" data-cart-close></div>
     <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" aria-hidden="true">
       <div class="drawer-head">
-        <h2 id="cart-title">Your bag</h2>
-        <button class="icon-btn" data-cart-close aria-label="Close bag">
+        <h2 id="cart-title">Cart</h2>
+        <button class="icon-btn" data-cart-close aria-label="Close cart">
           <svg width="14" height="14" viewBox="0 0 14 14"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.4"/></svg>
         </button>
       </div>
@@ -98,7 +98,7 @@
     else cart.push({ id, option, qty: 1 });
     saveCart();
     renderCart(true);
-    showToast(`${byId(id).name} added to your bag`);
+    showToast(`${byId(id).name} added to your cart`);
   }
 
   function renderCart(bump) {
@@ -111,7 +111,7 @@
     const lines = $("[data-cart-lines]");
     const foot = $("[data-cart-foot]");
     if (!cart.length) {
-      lines.innerHTML = `<div class="drawer-empty"><p>Your bag is empty.</p><span>Fresh beans ship every Tuesday &amp; Friday.</span></div>`;
+      lines.innerHTML = `<div class="drawer-empty"><p>Your cart is empty.</p><span>Fresh beans ship every Tuesday &amp; Friday.</span></div>`;
       foot.innerHTML = `<a class="btn" href="shop.html">Browse the shop <span class="arrow">→</span></a>`;
       return;
     }
@@ -174,7 +174,7 @@
     return `<div class="roast"><span class="roast-dots" aria-hidden="true">${dots}</span>${names[level]} roast</div>`;
   }
 
-  function productCard(p) {
+  function productCard(p, i) {
     const opts = p.type === "coffee" ? SHOP.grinds : p.sizes;
     const optLabel = p.type === "coffee" ? "Grind" : "Size";
     const select = opts.length > 1
@@ -189,8 +189,9 @@
       <div class="card-media">
         ${p.tag ? `<span class="card-tag">${p.tag}</span>` : ""}
         ${SHOP.art.forProduct(p)}
-        <div class="card-quick"><button class="btn" data-add="${p.id}">Add to bag — ${money(p.price)}</button></div>
+        <div class="card-quick"><button class="btn" data-add="${p.id}">Add to cart +</button></div>
       </div>
+      <span class="card-idx">(${String(i + 1).padStart(2, "0")})</span>
       <div class="card-info"><h3 class="card-title">${p.name}</h3><span class="card-price">${money(p.price)}</span></div>
       ${details}
       <div class="card-options">${select}</div>
@@ -254,7 +255,7 @@
     }
     const lines = [[23.44, "Tropic of Cancer"], [0, "Equator"], [-23.44, "Tropic of Capricorn"]].map(([lat, name]) =>
       `<line x1="0" x2="${W}" y1="${ty(lat)}" y2="${ty(lat)}" stroke="#161613" stroke-opacity="${lat === 0 ? 0.35 : 0.2}" stroke-dasharray="${lat === 0 ? "0" : "3 5"}"/>
-       <text x="${W - 6}" y="${ty(lat) - 6}" text-anchor="end" font-family="Inter, sans-serif" font-size="11" fill="#6b6a66">${name}</text>`).join("");
+       <text x="${W - 6}" y="${ty(lat) - 6}" text-anchor="end" font-family="Inter Tight, sans-serif" font-size="11" fill="#6b6a66">${name}</text>`).join("");
     const pins = SHOP.origins.map((o) => {
       const [x, y] = px(o.coords);
       const side = labelSide[o.id];
@@ -273,19 +274,17 @@
 
   const storiesEl = $("[data-stories]");
   if (storiesEl) {
-    storiesEl.innerHTML = SHOP.origins.map((o) => {
+    storiesEl.innerHTML = SHOP.origins.map((o, i) => {
       const beans = SHOP.products.filter((p) => p.originId === o.id);
       const lat = `${Math.abs(o.coords[1]).toFixed(1)}°${o.coords[1] >= 0 ? "N" : "S"}`;
       const lon = `${Math.abs(o.coords[0]).toFixed(1)}°${o.coords[0] >= 0 ? "E" : "W"}`;
       return `<article class="story" id="${o.id}">
         <div class="story-head reveal">
-          <div class="story-swatch" style="background:${o.color}33">${SHOP.art.cherry(o.color)}</div>
-          <div>
-            <span class="eyebrow eyebrow--plain">${o.region} · ${lat} ${lon}</span>
-            <h2 class="h2">${o.country}</h2>
-          </div>
+          <span class="label">(ORIGIN_0${i + 1})</span>
+          <h2 class="h2">${o.country}</h2>
+          <span class="label muted">${o.region} · ${lat} ${lon}</span>
         </div>
-        <h3 class="h3 italic reveal">${o.title}</h3>
+        <h3 class="h3 reveal">${o.title}</h3>
         <dl class="facts reveal">
           <div><dt>Altitude</dt><dd>${o.altitude}</dd></div>
           <div><dt>Varietals</dt><dd>${o.varietals}</dd></div>
@@ -328,7 +327,7 @@
   // Home page origins list
   $$("[data-origin-list]").forEach((ul) => {
     ul.innerHTML = SHOP.origins.map((o, i) => `<li><a href="origins.html#${o.id}">
-      <span class="idx">0${i + 1}</span>
+      <span class="idx">(0${i + 1})</span>
       <span class="country">${o.country}</span>
       <span class="region">${o.region}</span>
       <span class="go" aria-hidden="true">→</span>

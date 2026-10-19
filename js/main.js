@@ -354,6 +354,12 @@
     el.innerHTML = el.dataset.heroBags.split(" ").map((id) => SHOP.art.forProduct(byId(id))).join("");
   });
 
+  /* ---------------- Video clips: respect reduced motion ---------------- */
+
+  if (reduceMotion) {
+    $$("video[autoplay]").forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+  }
+
   /* ---------------- Newsletter ---------------- */
 
   $$("[data-signup]").forEach((form) => {

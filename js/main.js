@@ -357,6 +357,17 @@
 
   /* ---------------- Video clips: respect reduced motion ---------------- */
 
+  // <source media> is only read on load, so pick the framing for the current screen here too
+  const film = $(".hero-video");
+  if (film) {
+    const portrait = window.matchMedia("(max-aspect-ratio: 4/5)");
+    const pick = () => {
+      const want = portrait.matches ? "hero-film-portrait" : "hero-film.";
+      if (film.currentSrc && !film.currentSrc.includes(want)) film.load();
+    };
+    portrait.addEventListener("change", pick);
+  }
+
   if (reduceMotion) {
     $$("video[autoplay]").forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
   }

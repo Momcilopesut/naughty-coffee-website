@@ -43,12 +43,15 @@ The mark is a brush ensō (open zen circle) with a vermilion coffee-cherry dot.
 
 ## Header film
 
-`video/hero-film.webm` / `.mp4` is a 20-second loop drawn in code: farms at dawn → city street → café →
-cappuccino with tulip latte art. To change it, edit `tools/hero-film/film.html` (open it in a browser and call
-`render(t)` to preview any second), then render and encode:
+`video/hero-film*.webm` / `.mp4` is a 20-second loop cut from the café's own photos and footage:
+coffee farm → roaster → storefront → walk through the café → hand pour → latte art. Photos get a slow
+camera move, shots crossfade, and the end blends into the start. There is a 16:9 cut for desktop and a
+2:3 cut (`-portrait`) for phones; the page picks one by screen shape.
+
+To swap a shot, edit the `SHOTS` list in `tools/hero-film/cut.py` and run (needs ffmpeg and Pillow):
 
 ```sh
-node tools/hero-film/render.js        # writes 480 PNG frames to tools/hero-film/frames/ (needs Playwright)
-ffmpeg -framerate 24 -i tools/hero-film/frames/f%04d.png -c:v libx264 -crf 24 -pix_fmt yuv420p -movflags +faststart video/hero-film.mp4
-ffmpeg -i video/hero-film.mp4 -c:v libvpx-vp9 -b:v 0 -crf 38 -an video/hero-film.webm
+python3 tools/hero-film/cut.py path/to/cafe-walkthrough.mp4 video
 ```
+
+`tools/hero-film/film.html` is the earlier illustrated version, kept for reference.

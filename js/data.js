@@ -240,24 +240,25 @@ SHOP.mark = (x, y, size, ink = "#111", dot = "#c8402c") =>
 SHOP.art = {
   /* Coffee label: a white receipt card with a torn (zigzag) bottom edge. */
   label(p) {
-    const o = SHOP.origins.find((x) => x.id === p.originId);
+    // Readable at card size: a colour band per coffee, the name large, three notes, the mark.
     const country = (p.origin || "").split(" · ").length > 1 ? "Blend" : p.origin;
-    const lines = [
-      o ? o.region.split(",")[0] : p.origin,
-      p.process,
-      o ? o.altitude.replace(/,/g, "") : "Seasonal",
-      o ? o.varietals.split(" · ")[0] : "Rotating lots"
-    ].map((t) => t.toUpperCase());
+    const words = p.name.toUpperCase().split(" "), lines = [""];
+    words.forEach((w) => { const l = lines.length - 1; (lines[l] + " " + w).trim().length > 12 && lines[l] ? lines.push(w) : (lines[l] = (lines[l] + " " + w).trim()); });
+    const ink = ["#8d3b4a", "#4f6d7a", "#c4542a", "#7c9a6b"].includes(p.color) ? "#fff" : "#111";
     let zig = "";
     for (let x = 206; x > 34; x -= 8) zig += ` L${x - 4} 202 L${x - 8} 196`;
+    const t = (x, y, size, weight, text, fill = "#111", extra = "") =>
+      `<text x="${x}" y="${y}" font-family="Inter Tight, sans-serif" font-weight="${weight}" font-size="${size}" fill="${fill}"${extra}>${text}</text>`;
     return `<svg viewBox="26 22 188 188" aria-hidden="true">
       <path d="M34 30 H206 V196${zig} Z" fill="#fff"/>
-      <text x="120" y="56" text-anchor="middle" font-family="Inter Tight, sans-serif" font-weight="600" font-size="9" letter-spacing="-0.2" fill="#111">(${p.name.toUpperCase()}, ${country.toUpperCase()})</text>
-      ${lines.map((t, i) => `<text x="48" y="${78 + i * 10}" font-family="Inter Tight, sans-serif" font-size="6.4" fill="#111">${t}</text>`).join("")}
-      <text x="48" y="132" font-family="Inter Tight, sans-serif" font-weight="600" font-size="6.4" fill="#111">(${p.notes.join(", ").toUpperCase()})</text>
-      ${SHOP.mark(46, 168, 18)}
-      <text x="70" y="181" font-family="Inter Tight, sans-serif" font-weight="500" font-size="7.5" letter-spacing="1.6" fill="#111">KUMCOFFEE</text>
-      <rect x="184" y="173" width="10" height="10" fill="${p.color}"/>
+      <rect x="34" y="30" width="172" height="34" fill="${p.color}"/>
+      ${t(46, 52, 10, 600, `(${country.toUpperCase()})`, ink, ' letter-spacing=".4"')}
+      ${t(194, 52, 8.5, 500, p.process.toUpperCase(), ink, ' text-anchor="end"')}
+      ${lines.slice(0, 2).map((l, i) => t(45, 92 + i * 20, 19, 700, l, "#111", ' letter-spacing="-0.8"')).join("")}
+      ${t(46, 104 + Math.min(lines.length, 2) * 20 - 6, 8.5, 500, p.notes.slice(0, 3).join(" / "), "#444")}
+      ${SHOP.mark(46, 167, 18)}
+      ${t(70, 180, 7.5, 500, "KUMCOFFEE", "#111", ' letter-spacing="1.6"')}
+      ${t(194, 180, 7.5, 500, (p.size || "").toUpperCase(), "#111", ' text-anchor="end"')}
     </svg>`;
   },
   /* Drip-bag box: grey packet with a coloured panel. */

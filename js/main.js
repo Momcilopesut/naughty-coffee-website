@@ -315,8 +315,7 @@
   $$("[data-origin-list]").forEach((ul) => {
     ul.innerHTML = SHOP.origins.map((o, i) => `<li><a href="origins.html#${o.id}">
       <span class="idx">(0${i + 1})</span>
-      <span class="country">${o.country}</span>
-      <span class="region">${o.region}</span>
+      <span class="place"><span class="country">${o.country}</span><span class="region">${o.region}</span></span>
       <span class="go" aria-hidden="true">→</span>
     </a></li>`).join("");
   });

@@ -175,6 +175,41 @@ SHOP.menu = {
   ]
 };
 
+/* ---------- Product card (used by the page script and by the build, which pre-renders grids) ---------- */
+
+SHOP.money = (n) => SHOP.currency + (Number.isInteger(n) ? n : n.toFixed(2));
+
+SHOP.roastDots = function (level) {
+  const names = ["", "Light", "Light–medium", "Medium", "Medium–dark", "Dark"];
+  let dots = "";
+  for (let i = 1; i <= 5; i++) dots += `<b class="${i <= level ? "on" : ""}"></b>`;
+  return `<div class="roast"><span class="roast-dots" aria-hidden="true">${dots}</span>${names[level]} roast</div>`;
+};
+
+SHOP.productCard = function (p, i) {
+  const opts = p.options || (p.type === "coffee" ? SHOP.grinds : p.sizes);
+  const optLabel = p.type === "coffee" && !p.options ? "Grind" : "Size";
+  const select = opts.length > 1
+    ? `<select class="select" aria-label="${optLabel} for ${p.name}" data-option>${opts.map((o) => `<option>${o}</option>`).join("")}</select>`
+    : `<span class="mono muted" data-option-fixed="${opts[0]}">${opts[0]}</span>`;
+  const details = p.type === "coffee"
+    ? `<p class="card-meta">${p.origin} · ${p.process} · ${p.size}</p>
+       <div class="notes">${p.notes.map((n) => `<span>${n}</span>`).join("")}</div>
+       ${SHOP.roastDots(p.roast)}`
+    : `<p class="card-meta">${p.origin}</p>`;
+  return `<article class="card reveal" data-type="${p.type}" data-price="${p.price}" data-name="${p.name}" data-order="${i}" style="--tint:${p.color}">
+    <div class="card-media">
+      ${p.tag ? `<span class="card-tag">${p.tag}</span>` : ""}
+      ${SHOP.art.forProduct(p)}
+      <div class="card-quick"><button class="btn" data-add="${p.id}">Add to cart +</button></div>
+    </div>
+    <span class="card-idx">(${String(i + 1).padStart(2, "0")})</span>
+    <div class="card-info"><h3 class="card-title">${p.name}</h3><span class="card-price">${SHOP.money(p.price)}</span></div>
+    ${details}
+    <div class="card-options">${select}</div>
+  </article>`;
+};
+
 /* ---------- Ticker: cups sold ----------
    Total = cupsPerDay × 365 × years, split by each drink's share of sales.
    `change` is the % change versus the previous year. Edit these to update the ticker. */

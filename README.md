@@ -55,3 +55,11 @@ python3 tools/hero-film/cut.py path/to/cafe-walkthrough.mp4 path/to/ending.mov v
 ```
 
 `tools/hero-film/film.html` is the earlier illustrated version, kept for reference.
+
+## Performance notes
+
+- Photos are WebP with an 800px copy for phones (`img/*-800.webp`); pages pick the right one via `srcset`.
+- Product grids are pre-rendered into the HTML at build time by `tools/render-products.js` (same template as the page script).
+- The header film starts loading after the page has finished; other clips load when they come near the screen.
+- Inter Tight is self-hosted in `fonts/` and preloaded.
+- Host on something that serves gzip/brotli and long cache headers (GitHub Pages, Netlify, Cloudflare Pages all do).

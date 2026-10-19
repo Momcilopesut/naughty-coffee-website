@@ -74,17 +74,20 @@
     </aside>`);
 
   const drawer = $(".drawer");
+  drawer.inert = true;
   let lastFocus = null;
 
   function openCart() {
     lastFocus = document.activeElement;
     document.body.classList.add("cart-open");
     drawer.setAttribute("aria-hidden", "false");
+    drawer.inert = false;
     $(".icon-btn", drawer).focus();
   }
   function closeCart() {
     document.body.classList.remove("cart-open");
     drawer.setAttribute("aria-hidden", "true");
+    drawer.inert = true;
     if (lastFocus) lastFocus.focus();
   }
   $$("[data-cart-open]").forEach((b) => b.addEventListener("click", openCart));
@@ -106,7 +109,7 @@
     const count = cart.reduce((n, l) => n + l.qty, 0);
     $$(".cart-count").forEach((el) => {
       el.textContent = count;
-      if (bump) { el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); }
+      if (bump && el.animate) el.animate([{ transform: "scale(1)" }, { transform: "scale(1.3)" }, { transform: "scale(1)" }], { duration: 450 });
     });
 
     const lines = $("[data-cart-lines]");
@@ -168,42 +171,11 @@
 
   /* ---------------- Product grids ---------------- */
 
-  function roastDots(level) {
-    const names = ["", "Light", "Light–medium", "Medium", "Medium–dark", "Dark"];
-    let dots = "";
-    for (let i = 1; i <= 5; i++) dots += `<b class="${i <= level ? "on" : ""}"></b>`;
-    return `<div class="roast"><span class="roast-dots" aria-hidden="true">${dots}</span>${names[level]} roast</div>`;
-  }
-
-  function productCard(p, i) {
-    const opts = p.options || (p.type === "coffee" ? SHOP.grinds : p.sizes);
-    const optLabel = p.type === "coffee" && !p.options ? "Grind" : "Size";
-    const select = opts.length > 1
-      ? `<select class="select" aria-label="${optLabel} for ${p.name}" data-option>${opts.map((o) => `<option>${o}</option>`).join("")}</select>`
-      : `<span class="mono muted" data-option-fixed="${opts[0]}">${opts[0]}</span>`;
-    const details = p.type === "coffee"
-      ? `<p class="card-meta">${p.origin} · ${p.process} · ${p.size}</p>
-         <div class="notes">${p.notes.map((n) => `<span>${n}</span>`).join("")}</div>
-         ${roastDots(p.roast)}`
-      : `<p class="card-meta">${p.origin}</p>`;
-    return `<article class="card reveal" data-type="${p.type}" data-price="${p.price}" data-name="${p.name}" data-order="${i}" style="--tint:${p.color}">
-      <div class="card-media">
-        ${p.tag ? `<span class="card-tag">${p.tag}</span>` : ""}
-        ${SHOP.art.forProduct(p)}
-        <div class="card-quick"><button class="btn" data-add="${p.id}">Add to cart +</button></div>
-      </div>
-      <span class="card-idx">(${String(i + 1).padStart(2, "0")})</span>
-      <div class="card-info"><h3 class="card-title">${p.name}</h3><span class="card-price">${money(p.price)}</span></div>
-      ${details}
-      <div class="card-options">${select}</div>
-    </article>`;
-  }
-
   $$("[data-products]").forEach((grid) => {
     const type = grid.dataset.products;
     const limit = +grid.dataset.limit || Infinity;
     const list = SHOP.products.filter((p) => type === "all" || p.type === type).slice(0, limit);
-    grid.innerHTML = list.map(productCard).join("");
+    if (!grid.children.length) grid.innerHTML = list.map(SHOP.productCard).join("");  // pages ship pre-rendered cards
   });
 
   document.addEventListener("click", (e) => {
@@ -263,11 +235,11 @@
 
   $$("[data-belt]").forEach((holder) => {
     const ty = (lat) => ((32 - lat) / 64) * H;
-    let dots = "";
-    for (let x = 10; x < W; x += 20) for (let y = 10; y < H; y += 20) {
-      const inBelt = y > ty(23.44) && y < ty(-23.44);
-      dots += `<circle cx="${x}" cy="${y}" r="1.3" fill="#161613" opacity="${inBelt ? 0.22 : 0.07}"/>`;
-    }
+    // dot grid as one repeating pattern, stronger inside the coffee belt
+    const beltTop = ty(23.44), beltH = ty(-23.44) - ty(23.44);
+    const dots = `<defs><pattern id="belt-dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.3" fill="#161613"/></pattern></defs>
+      <rect width="${W}" height="${H}" fill="url(#belt-dots)" opacity=".07"/>
+      <rect y="${beltTop}" width="${W}" height="${beltH}" fill="url(#belt-dots)" opacity=".22"/>`;
     const lines = [[23.44, "Tropic of Cancer"], [0, "Equator"], [-23.44, "Tropic of Capricorn"]].map(([lat, name]) =>
       `<line x1="0" x2="${W}" y1="${ty(lat)}" y2="${ty(lat)}" stroke="#161613" stroke-opacity="${lat === 0 ? 0.35 : 0.2}" stroke-dasharray="${lat === 0 ? "0" : "3 5"}"/>
        <text x="${W - 6}" y="${ty(lat) - 6}" text-anchor="end" font-family="Inter Tight, sans-serif" font-size="11" fill="#6b6a66">${name}</text>`).join("");
@@ -356,7 +328,7 @@
     const text = n.toLocaleString("en-US");
     if (el.dataset.len !== String(text.length)) {
       el.innerHTML = [...text].map((ch) => /\d/.test(ch)
-        ? `<span class="d"><span class="strip">${"0123456789".split("").map((x) => `<span>${x}</span>`).join("")}</span></span>`
+        ? `<span class="d"><span class="strip">0\n1\n2\n3\n4\n5\n6\n7\n8\n9</span></span>`
         : `<span class="sep">${ch}</span>`).join("");
       el.dataset.len = text.length;
     }
@@ -381,7 +353,7 @@
     };
     const today0 = cupsToday();
     // the three-year figure is the running total, so today's cups so far are part of it
-    const values = { total, today: today0, perDay: cupsPerDay };
+    const values = { total, today: today0 };
     mix.forEach((m, i) => { values["d" + i] = cups[i]; });
 
     const fmt = (n) => n.toLocaleString("en-US");
@@ -394,7 +366,6 @@
       `<span class="tick tick-live"><span class="live-dot"></span><b data-live-label>LIVE</b></span>`,
       item("total", `Cups sold · ${years} yrs`),
       item("today", "Cups today"),
-      item("perDay", "Cups / day"),
       ...mix.map((m, i) => item("d" + i, m.name, m.change))
     ].join("");
     el.innerHTML = `<div class="ticker-track"><div class="ticker-set">${items}</div><div class="ticker-set" aria-hidden="true">${items}</div></div>`;
@@ -436,7 +407,7 @@
         values["d" + i]++; values.total++; values.today++;
         ["d" + i, "total", "today"].forEach(show);
         $$(`[data-tick="d${i}"], [data-tick="total"], [data-tick="today"]`, el).forEach((t) => {
-          t.classList.remove("flash"); void t.offsetWidth; t.classList.add("flash");
+          if (t.animate) t.animate([{ background: "rgba(95, 194, 126, .28)" }, { background: "transparent" }], { duration: 1400, easing: "ease-out" });
         });
       }
       setLive();
@@ -450,6 +421,30 @@
   $$("[data-hero-bags]").forEach((el) => {
     el.innerHTML = el.dataset.heroBags.split(" ").map((id) => SHOP.art.forProduct(byId(id))).join("");
   });
+
+  /* ---------------- Videos: load late, play only when wanted ---------------- */
+
+  const startVideo = (v) => {
+    if (v.dataset.poster) { v.poster = v.dataset.poster; v.removeAttribute("data-poster"); }
+    $$("source[data-src]", v).forEach((src) => { src.src = src.dataset.src; src.removeAttribute("data-src"); });
+    v.load();
+    if (!reduceMotion) v.play().catch(() => {});
+  };
+  // header film: poster shows at once, the film loads after everything else
+  $$("video[data-deferred-video]").forEach((v) => {
+    // wait for the page to settle (and the browser to be idle) so the film never competes with first paint
+    const go = () => setTimeout(() => (window.requestIdleCallback || setTimeout)(() => startVideo(v), { timeout: 2000 }), 1200);
+    document.readyState === "complete" ? go() : window.addEventListener("load", go, { once: true });
+  });
+  // other clips: fetch when within a screen of view, pause when off-screen
+  const lazyVids = $$("video[data-lazy-video]");
+  if ("IntersectionObserver" in window) {
+    const vio = new IntersectionObserver((entries) => entries.forEach(({ target: v, isIntersecting }) => {
+      if (isIntersecting) { if (!v.dataset.started) { v.dataset.started = 1; startVideo(v); } else if (!reduceMotion) v.play().catch(() => {}); }
+      else if (v.dataset.started) v.pause();
+    }), { rootMargin: "100% 0px" });
+    lazyVids.forEach((v) => vio.observe(v));
+  } else lazyVids.forEach(startVideo);
 
   /* ---------------- Video clips: respect reduced motion ---------------- */
 

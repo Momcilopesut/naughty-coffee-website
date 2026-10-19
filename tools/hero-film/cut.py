@@ -16,12 +16,12 @@ FPS, XF = 30, 0.8  # frame rate, crossfade length
 # name, source, seconds, start zoom, end zoom, focus at start (x, y), focus at end (x, y)
 # focus values are fractions of the source image; for video the start offset is in `clip`.
 SHOTS = [
-    ("farm",    "img/farmer.jpg",          3.6, 1.12, 1.00, (.50, .42), (.50, .28)),
-    ("roast",   "img/roasting-drum.jpg",   3.0, 1.00, 1.14, (.45, .50), (.42, .52)),
-    ("street",  "img/storefront.jpg",      3.0, 1.00, 1.18, (.40, .55), (.42, .62)),
+    ("farm",    "img/farmer.webp",          3.6, 1.12, 1.00, (.50, .42), (.50, .28)),
+    ("roast",   "img/roasting-drum.webp",   3.0, 1.00, 1.14, (.45, .50), (.42, .52)),
+    ("street",  "img/storefront.webp",      3.0, 1.00, 1.18, (.40, .55), (.42, .62)),
     ("walk",    WALK,                      4.6, 1.00, 1.00, (.50, .45), (.50, .45)),
-    ("pour",    "img/extraction.jpg",      2.8, 1.06, 1.16, (.42, .40), (.45, .52)),
-    ("latte",   "img/breakfast-table.jpg", 3.6, 1.05, 1.30, (.30, .55), (.22, .58)),
+    ("pour",    "img/extraction.webp",      2.8, 1.06, 1.16, (.42, .40), (.45, .52)),
+    ("latte",   "img/breakfast-table.webp", 3.6, 1.05, 1.30, (.30, .55), (.22, .58)),
     ("end",     END,                       5.0, 1.00, 1.00, (.50, .55), (.50, .55)),
 ]
 # video sources: start second, frame size after the pre-crop, pre-crop (skips phone UI in screen recordings)
@@ -101,7 +101,7 @@ def render(W, H, tag, tmp):
     mp4 = os.path.join(OUT, f"hero-film{tag}.mp4")
     run(["-i", seq, "-filter_complex", loop, "-map", "[out]", "-an", "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-profile:v", "high",
          "-pix_fmt", "yuv420p", "-movflags", "+faststart", mp4])
-    run(["-i", mp4, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "28", "-row-mt", "1", "-deadline", "good", "-cpu-used", "4",
+    run(["-i", mp4, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "33", "-row-mt", "1", "-deadline", "good", "-cpu-used", "2",
          "-an", os.path.join(OUT, f"hero-film{tag}.webm")])
     print(tag, "done", round(total - XF, 2), "s")
 

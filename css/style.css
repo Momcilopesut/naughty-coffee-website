@@ -4,13 +4,23 @@
    numbered sections and large full-width images.
    ========================================================================== */
 
+/* Inter Tight, self-hosted (one variable file for weights 400–700, latin) */
+@font-face {
+  font-family: "Inter Tight";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/inter-tight-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --ticker-h: 34px;
   --header-h: calc(76px + var(--ticker-h));
   --bg: #f6f6f5;
   --ink: #111111;
   --body: #4a4a48;      /* paragraph grey */
-  --muted: #8a8a86;
+  --muted: #6c6c68;
   --line: #dcdcd8;
   --frame: #e8e8e5;     /* image frames */
   --accent: #111111;
@@ -117,8 +127,6 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 .cart-btn { background: none; border: 0; padding: 6px 0; font-size: clamp(18px, 1.6vw, 22px); font-weight: 500; text-transform: uppercase; display: inline-flex; gap: 10px; }
 .cart-count::before { content: "("; }
 .cart-count::after { content: ")"; }
-.cart-count.bump { animation: bump .45s var(--ease); display: inline-block; }
-@keyframes bump { 40% { transform: scale(1.25); } }
 
 .menu-toggle { background: none; border: 0; width: 36px; height: 36px; padding: 0; position: relative; }
 .menu-toggle span { position: absolute; left: 4px; right: 4px; height: 2.5px; background: var(--ink); transition: transform .3s var(--ease), opacity .2s; }
@@ -443,7 +451,7 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 .footer-statement { font-size: clamp(44px, 7vw, 112px); font-weight: 700; text-transform: uppercase; letter-spacing: -.06em; line-height: .95; margin: 0; text-decoration: none; display: block; color: #cfcfcb; transition: color .2s; }
 .footer-statement:hover { color: #fff; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; border-top: 1px solid #3a3a38; padding-top: 32px; }
-.footer-grid h4 { font-size: 16px; font-weight: 500; text-transform: uppercase; margin: 0 0 12px; }
+.footer-grid h2 { font-size: 16px; font-weight: 500; text-transform: uppercase; margin: 0 0 12px; }
 .footer-grid p { margin: 0; color: #a9a9a5; font-size: 16px; }
 .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 16px; }
 .footer-grid a { text-decoration: none; color: #a9a9a5; }
@@ -502,7 +510,7 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 /* ---------- Sales ticker ---------- */
 
 .ticker { background: #111; color: #f6f6f5; overflow: hidden; border-top: 1px solid #2a2a28; border-bottom: 1px solid #2a2a28; font-variant-numeric: tabular-nums; }
-.ticker-track { display: flex; width: max-content; animation: ticker 60s linear infinite; }
+.ticker-track { display: flex; width: max-content; animation: ticker 60s linear infinite; will-change: transform; }
 .ticker:hover .ticker-track { animation-play-state: paused; }
 .ticker-set { display: flex; }
 .tick { display: inline-flex; align-items: baseline; gap: 10px; padding: 14px 28px; border-right: 1px solid #2a2a28; white-space: nowrap; font-size: 15px; }
@@ -514,12 +522,9 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 @keyframes ticker { to { transform: translateX(-50%); } }
 .tick-num { display: inline-flex; align-items: flex-start; line-height: 1.2em; height: 1.2em; align-self: center; }
 .tick-num .d { display: block; height: 1.2em; overflow: hidden; }
-.tick-num .strip { display: block; transition: transform 1.6s cubic-bezier(.2, .8, .2, 1); }
-.tick-num .strip > span { display: block; height: 1.2em; line-height: 1.2em; }
+.tick-num .strip { display: block; white-space: pre; line-height: 1.2em; transition: transform 1.6s cubic-bezier(.2, .8, .2, 1); }
 .tick-num .sep { display: block; height: 1.2em; }
 .tick { align-items: center; }
-.tick.flash { animation: tick-flash 1.4s ease-out; }
-@keyframes tick-flash { 0% { background: rgba(95, 194, 126, .28); } 100% { background: transparent; } }
 .tick-live { gap: 8px; }
 .tick-live b { color: #f6f6f5; font-weight: 600; letter-spacing: .08em; }
 .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #e2574a; align-self: center; animation: live 1.4s ease-in-out infinite; }
@@ -540,3 +545,6 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 .ticker--bar .tick-chg { font-size: 11px; }
 .ticker--bar .live-dot { width: 7px; height: 7px; }
 @media (max-width: 520px) { :root { --ticker-h: 30px; } .ticker--bar .tick { padding: 0 14px; font-size: 11px; } .ticker--bar .tick-num { font-size: 12px; } }
+
+/* reserve the coffee-belt map's space before the script draws it (no layout shift) */
+[data-belt] { box-sizing: content-box; aspect-ratio: 10 / 3; }

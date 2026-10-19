@@ -166,10 +166,30 @@ SHOP.menu = {
     { name: "Flat White", price: 4.2, desc: "Double ristretto, silky milk. Oat at no extra cost." },
     { name: "Cappuccino", price: 4.0, desc: "Classic, generous foam." },
     { name: "Batch Brew", price: 3.5, desc: "Today's filter, refills half price." },
+    { name: "Cortado", price: 3.8, desc: "Equal parts espresso and steamed milk." },
+    { name: "Decaf", price: 3.5, desc: "Night Shift decaf as espresso or filter." },
     { name: "Pour Over", price: 5.5, desc: "Any single origin from the shelf, brewed to order." },
     { name: "Espresso Tonic", price: 5.0, desc: "Espresso, yuzu tonic, a twist of lemon." },
     { name: "Matcha Latte", price: 5.0, desc: "Ceremonial-grade matcha over oat milk, a little honey." },
     { name: "Hojicha Latte", price: 4.8, desc: "Roasted green tea, a little honey. No coffee." }
+  ]
+};
+
+/* ---------- Ticker: cups sold ----------
+   Total = cupsPerDay × 365 × years, split by each drink's share of sales.
+   `change` is the % change versus the previous year. Edit these to update the ticker. */
+SHOP.sales = {
+  cupsPerDay: 500,
+  years: 3,
+  mix: [
+    { name: "Flat White",     share: 0.24, change: 6.8 },
+    { name: "Cappuccino",     share: 0.19, change: 2.1 },
+    { name: "Batch Brew",     share: 0.16, change: 4.4 },
+    { name: "Espresso",       share: 0.13, change: -1.7 },
+    { name: "Pour Over",      share: 0.11, change: 12.3 },
+    { name: "Espresso Tonic", share: 0.07, change: 18.9 },
+    { name: "Cortado",        share: 0.06, change: -0.6 },
+    { name: "Decaf",          share: 0.04, change: 3.2 }
   ]
 };
 

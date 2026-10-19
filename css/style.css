@@ -496,3 +496,22 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* ---------- Sales ticker ---------- */
+
+.ticker { background: #111; color: #f6f6f5; overflow: hidden; border-top: 1px solid #2a2a28; border-bottom: 1px solid #2a2a28; font-variant-numeric: tabular-nums; }
+.ticker-track { display: flex; width: max-content; animation: ticker 60s linear infinite; }
+.ticker:hover .ticker-track { animation-play-state: paused; }
+.ticker-set { display: flex; }
+.tick { display: inline-flex; align-items: baseline; gap: 10px; padding: 14px 28px; border-right: 1px solid #2a2a28; white-space: nowrap; font-size: 15px; }
+.tick b { font-weight: 500; letter-spacing: .02em; color: #a9a9a5; }
+.tick-num { font-weight: 600; font-size: 17px; letter-spacing: -.01em; }
+.tick-chg { font-size: 13px; font-weight: 500; }
+.tick-chg.up { color: #5fc27e; }
+.tick-chg.down { color: #e2574a; }
+@keyframes ticker { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .ticker { overflow-x: auto; }
+  .ticker-track { animation: none; }
+  .ticker-set[aria-hidden] { display: none; }
+}

@@ -349,6 +349,31 @@
     </a></li>`).join("");
   });
 
+  /* ---------------- Sales ticker ---------------- */
+
+  $$("[data-ticker]").forEach((el) => {
+    const { cupsPerDay, years, mix } = SHOP.sales;
+    const total = cupsPerDay * 365 * years;
+    // largest-remainder rounding so the drinks add up exactly to the total
+    const raw = mix.map((m) => m.share * total);
+    const cups = raw.map(Math.floor);
+    let left = total - cups.reduce((a, b) => a + b, 0);
+    raw.map((r, i) => [r - cups[i], i]).sort((a, b) => b[0] - a[0]).slice(0, left).forEach(([, i]) => cups[i]++);
+    const fmt = (n) => n.toLocaleString("en-US");
+    const item = (name, value, change) => {
+      const up = change >= 0;
+      return `<span class="tick"><b>${name.toUpperCase()}</b><span class="tick-num">${fmt(value)}</span>` +
+        (change === null ? "" : `<span class="tick-chg ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${Math.abs(change).toFixed(1)}%</span>`) + `</span>`;
+    };
+    const items = [
+      item(`Cups sold · ${years} yrs`, total, null),
+      item("Cups / day", cupsPerDay, null),
+      ...mix.map((m, i) => item(m.name, cups[i], m.change))
+    ].join("");
+    el.innerHTML = `<div class="ticker-track"><div class="ticker-set">${items}</div><div class="ticker-set" aria-hidden="true">${items}</div></div>`;
+    el.setAttribute("aria-label", `${fmt(total)} cups sold over ${years} years: ` + mix.map((m, i) => `${m.name} ${fmt(cups[i])}`).join(", "));
+  });
+
   /* ---------------- Hero bags ---------------- */
 
   $$("[data-hero-bags]").forEach((el) => {

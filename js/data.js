@@ -168,6 +168,7 @@ SHOP.menu = {
     { name: "Batch Brew", price: 3.5, desc: "Today's filter, refills half price." },
     { name: "Pour Over", price: 5.5, desc: "Any single origin from the shelf, brewed to order." },
     { name: "Espresso Tonic", price: 5.0, desc: "Espresso, yuzu tonic, a twist of lemon." },
+    { name: "Matcha Latte", price: 5.0, desc: "Ceremonial-grade matcha over oat milk, a little honey." },
     { name: "Hojicha Latte", price: 4.8, desc: "Roasted green tea, a little honey. No coffee." }
   ]
 };

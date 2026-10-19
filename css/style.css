@@ -151,7 +151,10 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 .figure { background: var(--frame); overflow: hidden; position: relative; }
 .figure svg { width: 100%; height: 100%; transition: transform 1.2s var(--ease); }
 .figure:hover svg { transform: scale(1.02); }
+.figure img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.2s var(--ease); }
+.figure:hover img { transform: scale(1.02); }
 .figure--wide { aspect-ratio: 16 / 9; }
+.figure--photo { aspect-ratio: 4 / 3; }
 .figure--tall { aspect-ratio: 4 / 5; }
 .figure--square { aspect-ratio: 1; }
 .figure--offset { width: min(64%, 640px); margin-left: auto; aspect-ratio: 4 / 5; }
@@ -160,7 +163,7 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 /* ---------- Hero ---------- */
 
 .hero { padding: 0 0 clamp(64px, 8vw, 120px); }
-.hero .figure { aspect-ratio: 16 / 8; }
+.hero .figure { aspect-ratio: 16 / 9; }
 @media (max-width: 760px) { .hero .figure { aspect-ratio: 4 / 5; } }
 .hero-media { display: flex; align-items: center; justify-content: center; padding: 6% 8%; height: 100%; }
 .hero-media svg { width: 30%; height: auto; filter: drop-shadow(0 30px 30px rgba(0, 0, 0, .14)); animation: float-in 1.1s var(--ease) both; }
@@ -371,7 +374,7 @@ button { font: inherit; color: inherit; cursor: pointer; letter-spacing: inherit
 
 /* Locations */
 .location { display: grid; grid-template-columns: 1fr 2fr; gap: 20px clamp(24px, 4vw, 64px); }
-.location .figure { aspect-ratio: 16 / 10; }
+.location .figure { aspect-ratio: 4 / 3; }
 .location .hours-line { font-size: clamp(18px, 1.6vw, 22px); margin: 18px 0 28px; }
 @media (max-width: 860px) { .location { grid-template-columns: 1fr; } }
 
